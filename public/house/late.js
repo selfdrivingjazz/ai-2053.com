@@ -1586,6 +1586,8 @@ function after2054(article, ctx) {
   tail.className = "a-end";
   // The past above is recycled as the reader scrolls: this room keeps its own plans.
   article.dataset.plans = "self";
+  // It also places the reader itself (at the end), not at the top.
+  article.dataset.entry = "own";
   tail.append(head, ...P);
   top.after(tail);
   const up = top.querySelector(".a-up");

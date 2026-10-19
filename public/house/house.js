@@ -487,6 +487,7 @@ function enter({ focus }) {
   const R = ROOMS[room];
   document.title = room === START || R.outside ? "AI 2053" : `${yearOf(room)}: ${R.title} · AI 2053`;
   if (focus) main.querySelector("h1")?.focus({ preventScroll: true });
+  holdStart(article);
   requestAnimationFrame(() => requestAnimationFrame(ensureOnward));
   // While the reader is in this room, prepare the plates behind its plans.
   const idle = window.requestIdleCallback ?? ((fn) => setTimeout(fn, 400));
@@ -530,6 +531,43 @@ new MutationObserver(() => {
   sweepQueued = true;
   queueMicrotask(sweepPlans);
 }).observe(main, { childList: true, subtree: true });
+
+/* ---------- the start of a room ---------- */
+
+// The house owns where a room starts. Motion already under way when the reader
+// chose (a touch fling's momentum, an elastic bounce at the foot of the page, a
+// smooth scroll) belongs to the room they left, and browsers keep running it after
+// the page is replaced, past the scrollTo(0, 0) in enter(). So until the reader acts
+// in the new room (touch, pointer, wheel, key), any scroll that arrives is that
+// leftover motion, and the room is put back at its start. The hold ends at the
+// reader's first input or once the page has been still for a moment. Rooms that
+// place the reader themselves (2054 opens at its end) mark data-entry="own".
+const READER_INPUT = ["touchstart", "pointerdown", "wheel", "keydown"];
+let holding = null;
+function holdStart(article) {
+  holdRelease();
+  if (!article || article.dataset.entry === "own") return;
+  const h = {
+    quiet: 0,
+    onScroll() {
+      if (scrollY > 0.5) window.scrollTo({ top: 0, behavior: "instant" });
+      clearTimeout(h.quiet);
+      h.quiet = setTimeout(holdRelease, 600);
+    },
+  };
+  holding = h;
+  h.quiet = setTimeout(holdRelease, 600);
+  addEventListener("scroll", h.onScroll, { passive: true });
+  for (const t of READER_INPUT) addEventListener(t, holdRelease, { capture: true, passive: true });
+}
+function holdRelease() {
+  const h = holding;
+  if (!h) return;
+  holding = null;
+  clearTimeout(h.quiet);
+  removeEventListener("scroll", h.onScroll);
+  for (const t of READER_INPUT) removeEventListener(t, holdRelease, { capture: true });
+}
 
 /* ---------- a way onward ---------- */
 
