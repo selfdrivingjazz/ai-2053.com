@@ -9,6 +9,11 @@
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
   },
+  // ai-2053.com and www both serve the site; the canonical URL is https://ai-2053.com/.
+  "routes": [
+    { "pattern": "ai-2053.com/*", "zone_name": "ai-2053.com" },
+    { "pattern": "www.ai-2053.com/*", "zone_name": "ai-2053.com" }
+  ],
   "workers_dev": true,
   "preview_urls": false
 }
