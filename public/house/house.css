@@ -1,0 +1,805 @@
+/* The House of 2053: base typography and layout for the whole house.
+   The AI 2040 register, measured from the live site at 1440px: ET Book on #fffff8,
+   21/30 body on a 700px measure, 65px masthead, 45px year headings, crimson
+   footnotes, 1.5px rounded pills and boxes, the Choose-a-Path tree, and a
+   ~455px sticky instrument column on the right. Then the stages:
+   0 instrument · 1 drift · 2 fraying · 3 rabbithole · 4 whispers.
+   Stage and --d / --fray / --map-d are set on <html> by house.js. */
+
+:root {
+  --paper: #fffff8;
+  --ink: #111;
+  --mute: #6d6d66;
+  --faint: #b9b9b0;
+  --accent: #b4121b;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --serif: "ET Book", "ETBembo", Palatino, "Palatino Linotype", Georgia, serif;
+  --sans: "Gill Sans", "Gill Sans MT", Seravek, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --d: 0;
+  --fray: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 21px;
+  line-height: 30px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: oldstyle-nums;
+}
+
+/* Rabbithole leak: a tiled maze glyph wallpaper, as on a 1997 homepage. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' fill='none' stroke='%23111' stroke-width='1.2'%3E%3Cpath d='M2 2h14v8H8v8h10v-6M24 2v10h10M30 18v16M2 24h12v10M20 24v6h6M24 34h-4'/%3E%3C/svg%3E");
+  background-size: 36px 36px;
+}
+[data-stage="3"] body::before { opacity: 0.07; }
+
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible, h1:focus-visible, main:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+h1:focus:not(:focus-visible), main:focus:not(:focus-visible) { outline: none; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 20;
+  padding: 6px 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 13px var(--mono);
+}
+.skip:focus { top: 8px; }
+
+/* ---------- top line: the kicker, and your path where AI 2040 keeps its nav ---------- */
+
+.top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 32px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 30px 65px 0;
+}
+.brand { flex: none; font-size: 24px; line-height: 30px; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
+.brand-k { font-weight: 400; }
+/* Room 1 carries its own masthead. */
+body:has(#front) .brand { visibility: hidden; }
+.trail {
+  margin: 0;
+  min-width: 0;
+  font-size: 18.75px;
+  line-height: 26px;
+  font-variant-numeric: lining-nums;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.t-room.now { color: var(--accent); }
+.t-sep { margin: 0 7px; color: var(--faint); }
+.t-more { color: var(--faint); margin-right: 6px; }
+
+/* ---------- layout ---------- */
+
+.layout {
+  display: grid;
+  overflow-x: clip; /* crooked frames and loose cables may lean out; the page never scrolls sideways */
+  grid-template-columns: minmax(0, 700px) minmax(280px, 455px);
+  justify-content: space-between;
+  column-gap: 56px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 65px;
+}
+.page { min-width: 0; outline: none; }
+.room { padding: 8px 0 120px; }
+
+/* ---------- masthead (Room 1) ---------- */
+
+.front { margin: 0 0 8px; }
+.front-k { margin: 0; font-size: 24px; line-height: 30px; text-transform: uppercase; }
+.front-t { margin: 8px 0 8px; font-size: 65px; line-height: 65px; font-variant-numeric: lining-nums; }
+.byline { margin: 0 0 36px; font-size: 18.75px; line-height: 28px; letter-spacing: -0.035em; }
+.nb { white-space: nowrap; }
+.front-again { margin: -28px 0 30px; font: 12px/18px var(--mono); color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; }
+.front-lede { margin: 0 0 21px; }
+
+.pills { display: flex; flex-wrap: wrap; gap: 9px; margin: 26px 0 0; }
+.pill {
+  padding: 4px 9px;
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 18px/27px var(--serif);
+  text-align: start;
+  cursor: pointer;
+}
+.pill:hover { background: #f3f3ea; }
+.pill[aria-expanded="true"], .pill[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.pill-s { font-size: 16px; line-height: 22px; padding: 3px 8px; }
+.pill-panel { margin: 14px 0 0; padding: 14px 18px; border: 1.5px solid var(--ink); border-radius: 8px; font-size: 19px; line-height: 28px; }
+.pill-panel p { margin: 0; }
+
+/* ---------- room head ---------- */
+
+.room-k {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 56px 0 10px;
+  font-size: 15px;
+  line-height: 18px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--mute);
+  font-variant-numeric: lining-nums;
+}
+.chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 5px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 700 13px/18px var(--mono);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-variant-numeric: lining-nums;
+}
+.chip-inline { display: none; }
+h1 {
+  margin: 0;
+  font-weight: 400;
+  font-size: 45px;
+  line-height: 50px;
+  font-variant-numeric: lining-nums;
+}
+.numerology { display: none; margin: 10px 0 0; font: 11px/16px var(--mono); color: var(--accent); letter-spacing: 0.04em; }
+/* There is no rule under an AI 2040 heading. One appears as the house frays, hanging from its left nail. */
+.rule {
+  display: block;
+  height: 1px;
+  margin: 18px 0 calc(28px + var(--fray) * 22px);
+  background: var(--ink);
+  opacity: min(1, calc(var(--fray) * 3));
+  transform-origin: 0 50%;
+  transform: rotate(calc(var(--fray) * 4.5deg));
+}
+
+/* ---------- prose ---------- */
+
+.prose { margin: 0 0 21px; max-width: 700px; hyphens: manual; }
+sup.fn { font-size: 13px; line-height: 0; margin-left: 1px; }
+sup.fn a { text-decoration: none; color: var(--accent); }
+.num s { color: var(--faint); text-decoration-thickness: 1px; }
+.num { white-space: nowrap; }
+.echo { font-style: italic; color: #4a4a45; }
+
+/* ---------- plate ---------- */
+
+.plate { margin: 34px 0 36px; }
+.plate-box { position: relative; aspect-ratio: 4 / 3; background: var(--paper); }
+.plate-c { display: block; width: 100%; height: 100%; }
+.plate-o { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.plate figcaption { margin-top: 10px; font-size: 15px; line-height: 21px; color: #333; }
+.plate figcaption b { font-weight: 400; font-variant: small-caps; letter-spacing: 0.06em; margin-right: 4px; }
+.plate-missing .plate-box { background: repeating-linear-gradient(45deg, transparent 0 6px, rgba(17, 17, 17, 0.08) 6px 7px); }
+.frame-out { fill: none; stroke: var(--ink); stroke-width: 1.6; }
+.frame-in { fill: none; stroke: var(--ink); stroke-width: 0.7; }
+.nail { fill: var(--ink); }
+.plate-o line { stroke: var(--ink); stroke-width: 0.7; }
+.plaque { fill: var(--paper); stroke: var(--ink); stroke-width: 1; }
+.plaque-n { font: 14px var(--serif); fill: var(--ink); font-variant-numeric: lining-nums; }
+.plate-box-n { fill: var(--paper); stroke: var(--ink); stroke-width: 1.2; }
+.plate-n { font: 20px var(--serif); fill: var(--ink); font-variant-numeric: lining-nums; }
+
+/* ---------- early-room figures (AI 2027/2040 inline widgets) ---------- */
+
+/* Expandable box: "▶ Training process and LLM psychology" */
+.xbox { margin: 30px 0 32px; border: 1.5px solid var(--ink); border-radius: 8px; }
+.xbox summary {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 11px 18px;
+  font-size: 19px;
+  line-height: 27px;
+  cursor: pointer;
+  list-style: none;
+}
+.xbox summary::-webkit-details-marker { display: none; }
+.xbox summary::before { content: "▶"; font-size: 11px; transition: transform 0.15s; }
+.xbox[open] summary::before { transform: rotate(90deg); }
+.xbox-n { margin-left: auto; font: 11px/18px var(--mono); color: var(--mute); letter-spacing: 0.04em; }
+.xbox > :not(summary) { margin-left: 18px; margin-right: 18px; }
+.xbox > :last-child { margin-bottom: 16px; }
+.ledger-l { padding-left: 24px; font-size: 19px; line-height: 28px; }
+.ledger-l li { margin-bottom: 4px; }
+.ledger-l li::marker { font: 12px var(--mono); color: var(--accent); }
+.ledger-mono { font: 15px/28px var(--mono); letter-spacing: -0.01em; }
+.qa { margin-top: 2px; font-size: 19px; line-height: 27px; }
+.qa dt { font: 11px/18px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mute); margin-top: 14px; }
+.qa dt::before { content: "Q. "; color: var(--accent); }
+.qa dd { margin: 2px 0 0; }
+.qa dd::before { content: "A. "; font: 11px var(--mono); color: var(--accent); letter-spacing: 0.08em; }
+/* Some printed pages have the roles the other way round. */
+.qa-swap dt::before { content: "A. "; }
+.qa-swap dd::before { content: "Q. "; }
+/* Appendix C, one page at a time. */
+.tr-wh { margin: 16px 0 6px; font-style: italic; font-size: 18px; line-height: 26px; color: #444; }
+.tr-folio { margin: 14px 0 0; font: 11px/16px var(--mono); letter-spacing: 0.08em; text-align: center; color: var(--mute); }
+.tr-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(17, 17, 17, 0.14); }
+.tr-b { min-width: 38px; font: 15px/22px var(--mono); text-align: center; }
+.tr-b:disabled { opacity: 0.3; cursor: default; }
+.tr-b:disabled:hover { background: var(--paper); }
+.tr-at { display: inline-flex; align-items: center; gap: 6px; font: 12px/20px var(--mono); color: #333; }
+.tr-in { width: 4.6em; padding: 2px 4px; border: 1.5px solid var(--ink); border-radius: 5px; background: var(--paper); color: var(--ink); font: 13px/20px var(--mono); text-align: center; }
+.tr-nav [data-reverse] { margin-left: auto; }
+
+/* Compute as squares, after AI 2027 */
+.compute { margin: 34px 0 36px; }
+.compute-row { display: flex; align-items: flex-end; justify-content: space-around; gap: 18px; }
+.compute-b { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.compute-b svg { display: block; max-width: 100%; height: auto; fill: #222; }
+.compute-b p, .compute figcaption { margin: 10px 0 0; font: 11.5px/16px var(--mono); text-align: center; color: #222; }
+.compute-b sup { font-size: 8px; line-height: 0; }
+.compute figcaption { margin-top: 18px; color: var(--mute); }
+
+/* The gallery: small multiples, one hung crooked */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 48px 20px;
+  margin: 40px 0 40px;
+}
+.g { position: relative; margin: 0; }
+.g-frame svg { display: block; width: 100%; height: auto; overflow: visible; }
+.g-ax { fill: none; stroke: var(--ink); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.g-ln { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.g figcaption { margin-top: 6px; font: 10.5px/14px var(--mono); color: #222; }
+.g-string { position: absolute; left: 0; top: -40px; width: 100%; height: 40px; overflow: visible; }
+.g-string path { fill: none; stroke: var(--mute); stroke-width: 0.8; }
+.g-string circle { fill: var(--ink); }
+.g-crooked { transform: rotate(-11deg); transform-origin: 50% -36px; }
+.g-crooked .g-frame { padding: 6px 8px 8px; border: 1px solid var(--ink); background: var(--paper); }
+/* An empty frame on the wall, for a chart on loan from another room. */
+.g-loan .g-frame { display: grid; place-items: center; min-height: 100%; aspect-ratio: 180 / 118; padding: 8px; border: 1px dashed rgba(17, 17, 17, 0.35); }
+.g-empty { font: 10.5px/14px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mute); }
+.g-loan .g-frame:has(.cf) { border-style: solid; border-color: var(--ink); }
+.g-loan .g-frame:has(.cf) .g-empty { display: none; }
+.g-loan .cf-curve { width: 100%; box-shadow: none; background: transparent; }
+
+/* KEY METRICS: value over label, label first in the source. */
+.keym { margin: 32px 0 34px; padding: 14px 18px 12px; border: 1.5px solid var(--ink); border-radius: 8px; }
+.keym-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.keym-k { font: 700 11px/16px var(--mono); letter-spacing: 0.16em; text-transform: uppercase; }
+.keym-g { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 0; }
+.keym-g:has(.keym-slot .cf) { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.keym-c { display: flex; flex-direction: column-reverse; justify-content: flex-end; min-width: 0; }
+.keym-c dd, .keym-c dt, .keym-src { display: grid; margin: 0; }
+.keym-c dd { font: 700 26px/32px var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.keym-c dt { font: 10px/13px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: #333; margin-top: 4px; }
+.keym-src { margin-top: 12px; font: 10px/14px var(--mono); color: var(--mute); }
+/* A figure from another room, filed as a fifth metric. It keeps its trace. */
+.keym-slot:not(:has(.cf)) { display: none; }
+.keym-slot { display: block; }
+.keym-slot .cf { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 0; background: none; box-shadow: none; rotate: none; font: 700 26px/32px var(--mono); color: var(--accent); }
+.keym-slot .cf small { order: 2; font: 10px/13px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: #333; }
+.keym-slot .cf::after { position: absolute; top: 0; right: 0; }
+.keym-slot .cf-number { font-size: 26px; line-height: 32px; }
+.keym-turn .a, .keym-turn .b { grid-area: 1 / 1; transition: opacity 0.5s ease calc(var(--i, 0) * 220ms), transform 0.5s ease calc(var(--i, 0) * 220ms); }
+.keym-turn .b { opacity: 0; visibility: hidden; transform: translateY(6px); }
+.keym-turn.turned .a { opacity: 0; visibility: hidden; transform: translateY(-6px); }
+.keym-turn.turned .b { opacity: 1; visibility: visible; transform: none; }
+.keym-turn.turned dd .b { color: var(--accent); }
+
+/* The memo */
+.memo { margin: 30px 0 32px; padding: 0 0 14px; border-top: 1.5px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.memo-h { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--ink); font: 700 11px/16px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; }
+.memo-b { margin: 14px 0 0; }
+.redact { display: inline-block; width: calc(var(--w) * 0.52em); height: 0.8em; background: var(--ink); vertical-align: -0.06em; }
+/* A sentence from another room lands where the first sentence was redacted. */
+.memo-1:has(.cf) .memo-bars, .memo-1:has(.cf) .sr { display: none; }
+.memo-1 .cf { background: none; box-shadow: none; rotate: none; padding: 0; font: inherit; font-style: normal; }
+
+/* The plan wall, after AI 2040's PLAN cards */
+.plans { margin: 40px 0 38px; }
+.plan-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; margin: 0; padding: 18px 0 0; list-style: none; }
+.plan, .plan-a-wrap { position: relative; }
+.plan {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 118px;
+  padding: 18px 12px 16px;
+  border: 2px solid var(--ink);
+  border-radius: 5px;
+  background: var(--paper);
+  font: 13px/16px var(--sans);
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+.plan b { font: 700 15px/18px var(--sans); letter-spacing: 0.06em; text-transform: uppercase; }
+.plan-a { z-index: 1; min-width: 180px; padding: 22px 16px 20px; border-width: 3.5px; font: 16px/20px var(--serif); }
+.plan-a b { font: 400 30px/32px var(--serif); letter-spacing: 0.06em; }
+.plan-s { position: absolute; z-index: 0; left: 34px; right: -20px; top: -27px; height: 64px; align-items: flex-end; justify-content: flex-start; padding: 5px 10px; transform: rotate(2.4deg); color: #444; }
+.plan-s b { font-size: 12px; line-height: 14px; }
+.plan-s span { display: none; }
+.pin { position: absolute; left: 50%; top: -5px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: var(--ink); }
+.plan-none { min-width: 70px; align-self: stretch; border: 1px dashed rgba(17, 17, 17, 0.2); background: transparent; }
+/* The sixth pin holds whatever arrives. */
+.plan-none:has(.cf) { min-width: 0; max-width: 220px; padding: 14px 10px 10px; border-style: solid; border-color: var(--ink); }
+.plan-none .cf { box-shadow: none; background: none; }
+.plan-none .cf-plan { border: 0; padding: 0; }
+
+/* ---------- the report: dated subsections, tables, stamps, charts (early.js) ---------- */
+
+/* "Late 2042: The order book", as AI 2027 heads its sections. */
+.sec { margin: 60px 0 18px; font-weight: 400; font-size: 30px; line-height: 36px; font-variant-numeric: lining-nums; }
+
+.rt { margin: 30px 0 34px; }
+.rt figcaption { margin: 0 0 8px; font-size: 16px; line-height: 22px; color: #222; }
+.rt-n { margin-right: 6px; font: 700 10.5px/16px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); }
+.rt-w { overflow-x: auto; }
+.rt table { width: 100%; border-collapse: collapse; font-size: 16px; line-height: 22px; font-variant-numeric: lining-nums tabular-nums; }
+.rt thead th { padding: 0 12px 6px 0; border-bottom: 1.5px solid var(--ink); font: 700 9.5px/14px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; text-align: left; vertical-align: bottom; color: #333; }
+.rt tbody th, .rt td { padding: 7px 12px 7px 0; border-bottom: 1px solid rgba(17, 17, 17, 0.14); font-weight: 400; text-align: left; vertical-align: top; }
+.rt tfoot td { padding: 7px 12px 0 0; border-top: 1.5px solid var(--ink); font-weight: 700; }
+.rt tbody tr:last-child > * { border-bottom: 0; }
+.rt sup.fn { font-size: 11px; }
+.rt-slot > * { border-top: 1px dashed rgba(17, 17, 17, 0.35); }
+.rt-empty { color: var(--faint); font-style: italic; }
+.rt-slot td:has(.cf) .rt-empty { display: none; }
+.rt-ex tbody th { width: 4.2em; font: 13px/22px var(--mono); color: var(--mute); }
+.rt-you > * { color: var(--accent); }
+.rt-sched tbody td:last-child { width: 24%; }
+.rt-sched tbody td:last-child::before { content: ""; display: block; height: 15px; border-bottom: 1px dotted var(--mute); }
+/* Schedule R-7: the reader's walk, filed. */
+.rt-live tbody th { width: 3.4em; font: 12px/22px var(--mono); color: var(--mute); }
+.tx-now > * { color: var(--accent); }
+.tx-now td:last-child { font-style: italic; }
+@media (prefers-reduced-motion: no-preference) {
+  .rt-live .tx { opacity: 0; transition: opacity 0.45s ease calc(var(--i, 0) * 150ms); }
+  .rt-live.filled .tx { opacity: 1; }
+}
+
+.stamp-w { margin: 30px 0 34px; }
+.stamp {
+  display: inline-block;
+  padding: 6px 14px 5px;
+  border: 3px double var(--accent);
+  border-radius: 4px;
+  color: var(--accent);
+  font: 700 14px/20px var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transform: rotate(-2.5deg);
+  opacity: 0.9;
+}
+
+.fig { margin: 34px 0 36px; }
+.fig svg { display: block; width: 100%; max-width: 640px; height: auto; overflow: visible; }
+.fig-ax { fill: none; stroke: var(--ink); stroke-width: 1; }
+.fig-grid { stroke: rgba(17, 17, 17, 0.14); stroke-dasharray: 2 3; }
+.fig-ln { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.fig-ln-k { stroke: var(--ink); stroke-width: 0.8; opacity: 0.5; }
+.fig-t { font: 9px var(--mono); fill: #444; }
+.fig figcaption { margin-top: 8px; font-size: 15px; line-height: 21px; color: #333; }
+
+/* Room 8: the filing's cover. */
+.cover { position: relative; margin: 36px 0 40px; padding: 28px 26px 22px; border: 1.5px solid var(--ink); text-align: center; }
+.cover p { margin: 0; }
+.cover-k { font: 700 10.5px/16px var(--mono); letter-spacing: 0.18em; text-transform: uppercase; }
+.cover-f { margin-top: 18px !important; font-size: 40px; line-height: 44px; font-variant: small-caps; letter-spacing: 0.04em; font-variant-numeric: lining-nums; }
+.cover-t { font-size: 24px; line-height: 30px; }
+.cover-p { font-size: 16px; line-height: 22px; font-style: italic; color: #333; }
+.cover-n { margin-top: 20px !important; font-size: 27px; line-height: 32px; }
+.cover-d { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 28px; margin: 22px 0 0; padding-top: 12px; border-top: 1px solid rgba(17, 17, 17, 0.2); font: 11px/16px var(--mono); }
+.cover-d dt { font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mute); }
+.cover-d dd { margin: 0; }
+.cover-stamp { position: absolute; right: 18px; top: 22px; transform: rotate(9deg); }
+.risk { padding-left: 34px; font-size: 18px; line-height: 26px; }
+.risk li { margin-bottom: 10px; }
+.risk li::marker { font: 12px var(--mono); color: var(--accent); }
+.xbox-b > .rt { margin: 6px 0 4px; }
+.xbox-b > .prose { font-size: 19px; line-height: 28px; }
+
+/* Room 3: Appendix A. A sober errata apparatus: entries open, sources open, corrections accrue. */
+.ax { margin: 26px 0 0; }
+.ax-meta { display: flex; flex-wrap: wrap; gap: 2px 18px; margin: 0; padding: 8px 0; border-top: 1.5px solid var(--ink); font: 10.5px/16px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: #333; }
+.ax-lede { margin: 6px 0 22px; font-size: 18px; line-height: 27px; color: #333; }
+.ax-l { margin: 0; padding: 0; list-style: none; border-top: 1.5px solid var(--ink); }
+.ax-e { border-bottom: 1px solid rgba(17, 17, 17, 0.16); }
+.ax-hh { margin: 0; font: inherit; }
+.ax-h {
+  display: grid;
+  grid-template-columns: 3.4em minmax(0, 1fr) auto 4.6em 14px;
+  align-items: baseline;
+  column-gap: 12px;
+  width: 100%;
+  padding: 13px 0 12px;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: 21px/28px var(--serif);
+  text-align: left;
+  cursor: pointer;
+}
+.ax-h::after { content: "▸"; font-size: 11px; color: var(--mute); transition: transform 0.15s; justify-self: end; }
+.ax-h[aria-expanded="true"]::after { transform: rotate(90deg); }
+.ax-h:hover { background: linear-gradient(90deg, transparent, rgba(17, 17, 17, 0.035) 30%, transparent); }
+.ax-n { font: 12px/28px var(--mono); color: var(--mute); }
+.ax-f { font: 700 15px/28px var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+.ax-f s { font-weight: 400; color: var(--faint); margin-right: 4px; }
+.ax-rev { font: 9.5px/28px var(--mono); letter-spacing: 0.06em; color: var(--accent); text-align: right; white-space: nowrap; }
+.ax-b { padding: 0 0 20px calc(3.4em * 21 / 18 + 12px); font-size: 18px; line-height: 27px; }
+.ax-m { margin: 0; }
+.ax-k { margin: 14px 0 4px; font: 10px/16px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); }
+.ax-s, .ax-c { margin: 0; padding-left: 1.3em; font-size: 16px; line-height: 23px; }
+.ax-s li, .ax-c li { margin-bottom: 5px; }
+.ax-s li::marker, .ax-c li::marker { font: 11px var(--mono); color: var(--accent); }
+.ax-c li { color: #333; }
+.ax-d { margin-right: 6px; font: 10.5px/23px var(--mono); color: var(--mute); }
+.ax-none { margin: 0; font: 11px/20px var(--mono); color: var(--faint); }
+.ax-new { color: var(--accent); }
+.ax-x {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  text-decoration: underline dotted 1px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.ax-x::after { content: " +"; font: 11px var(--mono); color: var(--accent); }
+.ax-x[aria-expanded="true"]::after { content: " −"; }
+.ax-q { margin: 6px 0 10px; padding: 8px 14px 9px; border-left: 2px solid var(--accent); background: color-mix(in srgb, var(--paper) 94%, var(--accent)); font-style: italic; }
+.ax-q p { margin: 0; }
+.ax-q footer { margin-top: 4px; font: normal 10px/14px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--mute); }
+.ax .plan-in { color: var(--ink); text-decoration: underline 1px; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.ax .plan-in:hover { background: color-mix(in srgb, var(--paper) 88%, var(--accent)); }
+.ax-void s { color: var(--mute); }
+mark.ax-mk { padding: 0 1px; background: color-mix(in srgb, var(--paper) 78%, var(--accent)); color: inherit; }
+/* What followed the reader in, filed as received. Only there when something did. */
+.ax-recv { border-top: 0; }
+.ax-recv:not(:has(.cf)), .ax-r:not(:has(.cf)) { display: none; }
+.ax-r { padding: 12px 0 14px; border-bottom: 1px solid rgba(17, 17, 17, 0.16); }
+.ax-rk { margin: 0 0 8px; font-size: 17px; line-height: 25px; color: #333; }
+.ax-rk .ax-n { margin-right: 1.4em; }
+.ax-r .cf { rotate: none; }
+.ax-r .ax-v { margin-left: 12px; vertical-align: middle; }
+.ax-ix { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; margin: 26px 0 0; padding-top: 12px; border-top: 1px solid var(--ink); }
+.ax-ix-k { margin-right: 6px; font: 10px/16px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--mute); }
+.ax-term { padding: 1px 8px; border: 1px solid var(--ink); border-radius: 4px; background: var(--paper); color: var(--ink); font: 15px/22px var(--serif); cursor: pointer; }
+.ax-term:hover { background: #f3f3ea; }
+.ax-term[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.ax-folio { display: flex; justify-content: space-between; align-items: baseline; margin: 34px 0 0; font: 12px/20px var(--mono); color: var(--mute); }
+.ax .ax-over { font: italic 18px/24px var(--serif); font-variant: small-caps; letter-spacing: 0.04em; }
+.ax .ax-over::after { content: " →"; font-style: normal; }
+
+/* Room 14: the verso. */
+.r14-gap { height: 64vh; }
+.r14-gap-s { height: 26vh; }
+.r14-q .r14-gap { height: 30vh; }
+.r14-blank { margin: 24px 0 0; font-style: italic; text-align: center; color: #444; }
+.r14-folio { margin: 22px 0 0; font: 13px/20px var(--mono); text-align: center; color: var(--mute); }
+.r14-f { margin: 0; text-align: center; }
+.ft {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 12px;
+  background: color-mix(in srgb, var(--paper) 90%, var(--accent));
+  box-shadow: 0 0 0 1px rgba(17, 17, 17, 0.18), 1px 2px 0 rgba(17, 17, 17, 0.12);
+  rotate: -1.5deg;
+}
+.ft::after { content: attr(data-from); position: absolute; top: 2px; right: -14px; font: 9px/1 var(--mono); color: var(--accent); }
+.ft b { font: 700 24px/1.1 var(--mono); }
+.ft small { font: 9.5px/1.2 var(--mono); letter-spacing: 0.05em; color: #555; }
+.ft-line { font-style: italic; font-size: 19px; line-height: 26px; }
+.ft-label, .ft-stamp { font: 700 12px/18px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; }
+.ft-stamp { color: var(--accent); background: none; box-shadow: none; border: 2px solid var(--accent); }
+.ft-curve { width: 200px; }
+.ft-curve svg { width: 100%; height: auto; overflow: visible; }
+.ft-curve polyline { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.r14-count { position: relative; margin: 0; text-align: center; font: 10.5px/22px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--mute); }
+.r14-d { display: inline-block; margin-left: 6px; padding: 0 6px; background: #111; color: #5f5; letter-spacing: 0.24em; }
+.r14-real { position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: -1; font: 96px/1 var(--serif); color: rgba(17, 17, 17, 0.045); font-variant-numeric: lining-nums; pointer-events: none; }
+
+/* Something Room 14 showed the reader before they got here. */
+.foretold:not(.pin) { position: relative; }
+.rt .fr[data-frag="stamp"] { display: inline-block; padding: 1px 7px 0; border: 2px solid var(--accent); border-radius: 3px; color: var(--accent); font: 700 10.5px/18px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; transform: rotate(-2deg); }
+.foretold::after { content: none; margin-left: 0.25em; font: 400 9px/0 var(--mono); letter-spacing: 0; vertical-align: super; color: var(--accent); text-transform: none; }
+.keym-c dd.foretold { display: block; }
+.g.foretold::after, .pin.foretold::after { position: absolute; top: -10px; right: 0; margin: 0; }
+
+/* Room 29: the review, printed again, smaller. */
+.again-w { margin: 44px 0 0; }
+.again { margin-top: 16px; padding: 12px 0 0 16px; border-left: 1px solid rgba(17, 17, 17, 0.3); font-size: 0.8em; line-height: 1.42; color: #333; }
+.again p { margin: 0 0 0.7em; }
+.again-k { font: 700 9px/14px var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
+
+/* ---------- plans (AI 2040's "Choose a Path") ---------- */
+
+.choose { margin: 64px 0 0; }
+/* The heading reads like an AI 2040 year heading: "2041: Plans". */
+.choose h2 { margin: 0 0 22px; font-weight: 400; font-size: 45px; line-height: 50px; font-variant-numeric: lining-nums; }
+.choose h2[data-year]::before { content: attr(data-year) ": "; }
+.q { padding: 14px 18px 15px; border: 1.5px solid var(--ink); border-radius: 9px; background: var(--paper); }
+.q p { margin: 0; }
+.doors {
+  display: grid;
+  grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.door-li { display: flex; flex-direction: column; min-width: 0; }
+.wire { position: relative; flex: 1; min-height: 82px; padding: 14px 0 16px 46px; }
+.wire svg { position: absolute; left: 22px; top: 0; width: 22px; height: 100%; overflow: visible; }
+.wire path { fill: none; stroke: #777; stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.say { margin: 0; font-style: italic; font-size: 18px; line-height: 24px; color: #333; }
+.door {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  column-gap: 0.38em;
+  padding: 18px 8px 17px;
+  border: 2px solid var(--ink);
+  border-radius: 5px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  text-decoration: none;
+  transition: box-shadow 0.12s;
+}
+.door:hover, .door:focus-visible { box-shadow: inset 0 0 0 1.5px var(--ink); }
+.door-k, .door-n { font: 700 15px/20px var(--sans); letter-spacing: 0.08em; text-transform: uppercase; font-variant-numeric: lining-nums; }
+.door-n {
+  display: inline-block;
+  transform:
+    translate(calc(var(--fray) * var(--slx, 0px)), calc(var(--fray) * var(--sly, 0px)))
+    rotate(calc(var(--fray) * var(--rot, 0deg)));
+}
+.door-sub { flex-basis: 100%; margin-top: 7px; font-size: 13px; line-height: 16px; letter-spacing: 0.05em; text-align: center; color: #222; }
+.door-li:nth-child(1) .door-n { --slx: 24px; --sly: 12px; --rot: -11deg; }
+.door-li:nth-child(2) .door-n { --slx: 18px; --sly: 20px; --rot: 8deg; }
+.door-li:nth-child(3) .door-n { --slx: 30px; --sly: 6px; --rot: 15deg; }
+.door-li:nth-child(4) .door-n { --slx: -12px; --sly: 24px; --rot: -6deg; }
+
+/* A room revisited after the house tore keeps the scars. */
+.scarred .q { border-style: solid dashed solid solid; border-right-color: var(--mute); }
+.scarred .door-li:nth-child(2) .door { transform: translate(3px, 7px) rotate(1.4deg); }
+.scarred .pill:nth-child(3) { transform: translateY(5px) rotate(-2deg); }
+.scarred .rule { opacity: 1; }
+
+/* ---------- notes ---------- */
+
+.notes { margin-top: 60px; padding-top: 12px; border-top: 1px solid var(--ink); font-size: 15px; line-height: 21px; }
+.notes h2, .map-slot summary { margin: 0 0 8px; font: 700 11px/18px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; }
+.notes ol { margin: 0; padding-left: 22px; }
+.notes li { margin-bottom: 6px; }
+.notes li::marker { color: var(--accent); }
+.notes li:focus { outline: none; background: rgba(180, 18, 27, 0.08); }
+
+/* ---------- the instrument aside: column above, path map below ---------- */
+
+.dash {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 28px 0 18px;
+}
+.dash > .col { flex: none; }
+.map { display: flex; flex-direction: column; flex: 1 1 0; min-height: 150px; margin: 22px 0 0; padding-top: 12px; border-top: 1px solid rgba(17, 17, 17, 0.25); }
+.map svg { display: block; flex: 1 1 0; min-height: 0; width: 100%; height: 100%; overflow: visible; }
+/* After the Void Loop the map is the instrument that matters: in late rooms the
+   column's lower instruments are gone and the torn map takes their place; in
+   early rooms the halftone field gives up some height to it. */
+#column.is-late.is-void .col-mid, #column.is-late.is-void .col-work { display: none; }
+#column.is-void:not(.is-late) .col-field { aspect-ratio: 1.9; }
+.dash:has(#column.is-void) .map { min-height: 260px; }
+
+/* path map */
+.map .node rect { fill: var(--paper); fill-opacity: calc(1 - var(--whisper, 0) * 0.85); stroke: var(--ink); stroke-width: 1.1; stroke-opacity: calc(1 - var(--whisper, 0) * 0.75); }
+.map .node .n { font: 15px var(--serif); fill: var(--ink); font-variant-numeric: lining-nums; }
+.map .node .yr { font: 7.5px var(--mono); fill: var(--mute); }
+.map .node.on-trail rect { stroke-width: 2.2; }
+.map .node.current rect { stroke: var(--accent); stroke-width: 2.6; stroke-opacity: 1; }
+.map .node.current .n { fill: var(--accent); }
+.map .node.rumour rect { stroke-dasharray: 3 3; stroke: var(--mute); }
+.map .node.rumour .n { fill: var(--mute); font-style: italic; font-size: 13px; }
+.map .node.centre rect { fill: var(--accent); fill-opacity: 1; stroke: var(--accent); }
+.map .node.centre .n, .map .node.centre .yr { fill: var(--paper); }
+.map .e { fill: none; stroke: var(--ink); stroke-linecap: round; }
+.map .e.taken { stroke-width: 1.1; }
+.map .e.trail { stroke-width: 2.6; }
+.map .e.untaken { stroke-width: 0.8; stroke-dasharray: 3 3; }
+.map .leader { fill: none; stroke: var(--mute); stroke-width: 0.6; stroke-dasharray: 1 2; }
+.map .wall { fill: none; stroke: var(--ink); stroke-width: 0.8; }
+.map .ghostpath { fill: none; stroke: #8a8a85; stroke-width: 1.3; stroke-dasharray: 1 3; stroke-linecap: round; }
+.map .thread { fill: none; stroke: var(--accent); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.map .node-fake { fill: none; stroke: var(--mute); stroke-dasharray: 1 3; }
+.map .n-fake { font: italic 11px var(--serif); fill: var(--mute); }
+
+/* ---------- motion: wires sway (only when motion is welcome) ---------- */
+
+@keyframes sway {
+  from { transform: rotate(-2.6deg); }
+  to { transform: rotate(2.6deg); }
+}
+.sway { transform-box: view-box; transform-origin: 0 0; animation: sway 6s ease-in-out infinite alternate; }
+.wire.loose svg { transform-origin: 50% 100%; animation: sway var(--sway, 5s) ease-in-out infinite alternate; }
+@media (prefers-reduced-motion: reduce) {
+  .sway, .wire.loose svg { animation: none !important; }
+  .door { transition: none; }
+  .xbox summary::before, .ax-h::after { transition: none; }
+  .keym .a, .keym .b { transition: none !important; }
+}
+
+/* ---------- stages ---------- */
+
+/* 1 · drift */
+[data-stage="1"] .chip, [data-stage="2"] .chip { font-variant-numeric: tabular-nums; }
+
+/* 2 · fraying: underlines and rules let go */
+[data-stage="2"] a, [data-stage="3"] a { text-underline-offset: calc(3px + var(--fray) * 6px); }
+[data-stage="2"] .q, [data-stage="3"] .q { transform: rotate(calc(var(--fray) * -0.7deg)); transform-origin: 0 0; }
+[data-stage="2"] .notes { border-top-style: dashed; }
+[data-stage="2"] .xbox, [data-stage="2"] .keym { border-right-style: dashed; }
+
+/* 3 · rabbithole: the 1997 homepage leaks in */
+[data-stage="3"] .room-head { text-align: center; }
+[data-stage="3"] .room-k { justify-content: center; }
+[data-stage="3"] .numerology { display: block; }
+[data-stage="3"] .choose h2::before, [data-stage="3"] .choose h2::after { content: " ●✺✹✸✷✶ "; color: var(--accent); font-size: 18px; letter-spacing: 0.1em; }
+[data-stage="3"] .choose h2 { text-align: center; }
+[data-stage="3"] .notes::before {
+  content: "UNDER CONSTRUCTION — THIS NOTE IS STILL BEING WRITTEN";
+  display: block;
+  margin: -12px 0 12px;
+  padding: 10px 0 0;
+  font: 700 10px/14px var(--mono);
+  letter-spacing: 0.14em;
+  border-top: 8px solid transparent;
+  border-image: repeating-linear-gradient(-45deg, var(--ink) 0 6px, var(--paper) 6px 12px) 8;
+}
+[data-stage="3"] .frame-out { stroke-dasharray: 40 3 12 3; }
+
+/* 4 · whispers: no chrome left */
+[data-stage="4"] .brand { visibility: hidden; }
+[data-stage="4"] .room-k .room-no { color: var(--faint); }
+[data-stage="4"] .rule { opacity: 0.35; }
+[data-stage="4"] .prose { color: #2a2a26; letter-spacing: 0.01em; }
+[data-stage="4"] .frame-out, [data-stage="4"] .plate-box-n { stroke: transparent; }
+[data-stage="4"] .plate figcaption { color: var(--faint); }
+[data-stage="4"] .q { border-color: transparent; padding-left: 0; }
+/* (plan cards keep their solid edge at every stage: a dotted, greyed card read as a plan that no longer works) */
+[data-stage="4"] .notes { border-top-color: transparent; }
+[data-stage="4"] .notes ol, [data-stage="4"] .notes h2 { display: none; }
+
+/* ---------- the centre ---------- */
+
+.centre h1 { font-size: 128px; line-height: 1; letter-spacing: -0.02em; margin: 6px 0 28px; }
+.whispers { margin: 0 0 56px; }
+.w { margin: 0 0 16px calc(var(--indent) * 1em); font-size: 21px; line-height: 30px; }
+.wt { opacity: calc(0.2 + var(--w) * 0.8); }
+.wt.hot { color: var(--accent); opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .w { opacity: 0; transform: translateY(6px); transition: opacity 1.4s ease, transform 1.4s ease; }
+  .w.heard { opacity: 1; transform: none; }
+}
+.attn { margin: 0 0 40px; }
+.attn svg { display: block; width: 100%; max-width: 380px; height: auto; }
+.attn text { font: 7px var(--mono); fill: var(--mute); }
+.attn-dots circle { fill: var(--accent); }
+.attn figcaption { margin-top: 6px; font: 11px/16px var(--mono); color: var(--mute); letter-spacing: 0.04em; }
+.centre .plate { max-width: 420px; }
+
+/* ---------- mobile (390px is a first-class layout) ---------- */
+
+.map-slot { display: none; }
+
+@media (max-width: 1100px) and (min-width: 861px) {
+  .top, .layout { padding-left: 40px; padding-right: 40px; }
+  .layout { grid-template-columns: minmax(0, 1fr) clamp(300px, 34vw, 380px); column-gap: 40px; }
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 860px) {
+  body { font-size: 20px; line-height: 30px; }
+  .top { gap: 16px; padding: 16px 18px 0; }
+  .brand { font-size: 18px; line-height: 24px; }
+  .trail { font-size: 16px; }
+  .layout { grid-template-columns: minmax(0, 1fr); padding: 0 18px; }
+  /* AI 2040's mobile instrument: a compact strip that stays with you. */
+  .dash {
+    order: -1;
+    z-index: 5;
+    height: auto;
+    margin: 0 -18px;
+    padding: 8px 18px 9px;
+    background: var(--paper);
+    border-bottom: 1px solid rgba(17, 17, 17, 0.14);
+  }
+  .room { padding: 4px 0 64px; }
+  .front-k { font-size: 20px; }
+  .front-t { font-size: 46px; line-height: 48px; }
+  .byline { font-size: 16px; line-height: 23px; margin-bottom: 26px; }
+  .room-k { margin-top: 40px; font-size: 13px; }
+  h1 { font-size: 36px; line-height: 42px; }
+  .plate { margin: 26px -6px; }
+  .pill { font-size: 17px; line-height: 25px; }
+  .choose h2 { font-size: 36px; line-height: 42px; }
+  .q { padding: 12px 14px; }
+  .doors { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .wire { min-height: 58px; padding: 10px 0 12px 46px; }
+  .door { padding: 12px 12px 13px; }
+  .door-sub { margin-top: 4px; }
+  .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 16px; }
+  .keym { padding: 12px 14px 10px; }
+  .keym-g, .keym-g:has(.keym-slot .cf) { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
+  .keym-c dd { font-size: 23px; }
+  .sec { margin-top: 48px; font-size: 26px; line-height: 32px; }
+  .rt table { font-size: 14px; line-height: 19px; }
+  .rt thead th { padding-right: 8px; font-size: 8.5px; letter-spacing: 0.06em; }
+  .rt tbody th, .rt td { padding: 6px 8px 6px 0; }
+  .rt-ex tbody th { width: 3.4em; font-size: 11px; }
+  .rt-live tbody th { width: 2.4em; font-size: 11px; }
+  .cover { padding: 22px 14px 18px; }
+  .cover-f { font-size: 32px; line-height: 36px; }
+  .cover-stamp { position: static; display: inline-block; margin-top: 14px; }
+  .risk { padding-left: 26px; font-size: 17px; line-height: 25px; }
+  .r14-gap { height: 48vh; }
+  .r14-q .r14-gap { height: 24vh; }
+  .ax-h { grid-template-columns: 2.7em minmax(0, 1fr) auto; font-size: 19px; line-height: 26px; padding: 12px 0 11px; }
+  .ax-h::after { display: none; }
+  .ax-rev { grid-column: 2 / -1; text-align: left; line-height: 16px; }
+  .ax-rev:empty { display: none; }
+  .ax-b { padding-left: 0; font-size: 17px; line-height: 26px; }
+  .ax-meta { gap: 0 12px; font-size: 9.5px; }
+  .tr-nav [data-reverse] { margin-left: 0; }
+  .again-w { margin-top: 32px; }
+  .compute-row { gap: 10px; }
+  .plan { min-width: 0; flex: 1 1 96px; }
+  .plan-a-wrap { flex: 1 1 100%; display: flex; }
+  .plan-a { flex: 1; min-width: 0; }
+  .plan-s { left: 46px; right: 4px; }
+  .plan-none { flex: 0 0 60px; min-height: 60px; }
+  .map-slot { display: block; margin-top: 30px; padding: 12px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  .map-slot summary { margin: 0; cursor: pointer; }
+  .map-slot-n { font-weight: 400; letter-spacing: 0.04em; text-transform: none; color: var(--mute); }
+  .map-slot .map { margin-top: 12px; border-top: 0; }
+  .map-slot .map svg { height: auto; flex: none; }
+  .centre h1 { font-size: 88px; }
+  .w { font-size: 19px; line-height: 27px; margin-left: calc(var(--indent) * 0.4em); }
+}

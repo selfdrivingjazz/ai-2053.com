@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>AI 2053 · icon source</title>
+<!--
+  Source of the site icons: /media/og/icon-192.png (rel=icon), /media/og/icon-32.png (rel=icon)
+  and /media/og/apple-touch-icon.png (180). Scales with the window, so one source renders every size.
+
+  Render (from the repo root, with the site served locally on a spare port):
+    PORT=4431 node server.mjs &
+    CH=~/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+    for s in 192:icon-192 180:apple-touch-icon 32:icon-32; do
+      $CH --no-sandbox --hide-scrollbars --force-device-scale-factor=1 --window-size=${s%%:*},${s%%:*} \
+        --virtual-time-budget=3000 --screenshot=public/media/og/${s#*:}.png http://127.0.0.1:4431/media/og/icon.html
+    done
+-->
+<link rel="stylesheet" href="/shared/fonts/et-book.css">
+<style>
+  html, body { margin: 0; width: 100vw; height: 100vh; overflow: hidden; background: #fffff8; }
+  body { display: grid; place-items: center; }
+  /* AI 2040's favicon is its two digits; ours are ours, in the report's face. */
+  b { font: 700 88vw/1 "ET Book", Georgia, serif; color: #111; letter-spacing: -0.05em; font-variant-numeric: lining-nums; transform: translate(-2vw, -4vw); }
+</style>
+</head>
+<body><b>53</b></body>
+</html>

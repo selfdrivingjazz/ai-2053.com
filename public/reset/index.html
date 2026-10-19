@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>AI 2053 · reset</title>
+<!-- Reviewer tool, out of world: clears only this site's own "ai2053." storage and
+     starts a new epoch so other open or old house tabs cannot write the old state back.
+     Not linked from the site. -->
+<script>
+(() => {
+  const clear = (s) => {
+    try {
+      const keys = [];
+      for (let i = 0; i < s.length; i++) { const k = s.key(i); if (k && k.startsWith("ai2053.") && k !== "ai2053.epoch") keys.push(k); }
+      keys.forEach((k) => s.removeItem(k));
+    } catch { /* storage unavailable */ }
+  };
+  try { localStorage.setItem("ai2053.epoch", Date.now().toString(36) + Math.random().toString(36).slice(2, 8)); } catch {}
+  clear(localStorage);
+  clear(sessionStorage);
+  // once more, after any stale tab's last in-flight write
+  setTimeout(() => { clear(localStorage); clear(sessionStorage); location.replace("/"); }, 250);
+})();
+</script>
+</head>
+<body style="background:#fffff8"></body>
+</html>

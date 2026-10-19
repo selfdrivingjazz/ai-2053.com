@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+*.log
+captures/
+.wrangler/
+.deploy/
+# Local working notes (their own git repo; never published).
+private/

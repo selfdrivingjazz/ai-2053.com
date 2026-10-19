@@ -1,0 +1,381 @@
+// Scroll rooms (2044–2047): the report register, told by scrolling (owner: the scroll-rooms designer).
+// Same data format as rooms-early.js; rendered by early.js, then scroll.js.
+// Plan targets (`doors[].to`) are the graph contract (owner); `say` may change.
+//
+// Fields read only by scroll.js:
+//   report   as in rooms-early.js, with two additions:
+//              { h, when, scene }               a dated subsection; `when` drives the column's date chip
+//                                               (scroll.js does it, so `at` is left out)
+//              { list: { cls: "sx-mount" } }    where the room's set piece (Figure N.1) is drawn
+//   track    the set piece: { n, cap, steps: [{ at | v | row, k, t, loud?, if? }], … per room }
+//            Steps are the dated paragraphs read beside the sticky figure. `at` (a month), `v` (a
+//            number) or `row` (an index into `rows`) is the figure's state while that step is read.
+//            `t` takes `^n` footnotes and `{name}` values filled from the reader's walk; `loud`
+//            replaces `t` once the calm has gone; `if: "loud" | "quiet"` shows a step only then.
+// Footnotes 80–99 belong to these rooms.
+export const SCROLL = {
+  16: {
+    date: "Mar 2044",
+    title: "The Scorecard",
+    question: "Was the forecast right?",
+    prose: [
+      "In March 2044 the Commission on Machine Conduct does what forecasters are always told to do and seldom do: it scores the forecast. The forecast in question is the one this record opened with, published in January 2041, with its dashed lines, its dated milestones and its stated confidence.^80 The Commission scores it line by line, against the Registry's own series.",
+      "The result fits on a single page. Of the seven lines that can be scored, six have come true. None has come true late. The forecast was right about nearly everything except the dates, and it was wrong about the dates in only one direction.",
+    ],
+    report: [
+      { h: "March 2044: Method", when: "Mar 2044" },
+      { p: "A line is scored when the Registry's series crosses the threshold the forecast named. The score is the forecast date minus the observed date, in months, so a negative score means the thing happened early. The Commission considered scoring the forecast's reasoning as well as its dates, and decided against it, on the grounds that the reasoning had been evaluated before publication and had passed.^81" },
+      {
+        keym: {
+          date: "Mar 2044",
+          cells: [["6 of 7", "Lines come true", "figure", "16:true"], ["0", "Lines late", "number", "16:late"], ["−26 mo", "Median score", "figure", "16:median"], ["1", "Not yet observed", "figure", "16:open"]],
+          src: "Commission on Machine Conduct, Forecast Scorecard 44/1",
+          slot: "figure number",
+          ps: "listed",
+        },
+      },
+      { p: "The scorecard is reproduced below as the Commission drew it, as a timeline. The dashed line is the forecast's index; the red line is the index the Registry observed. Each hollow ring is a date the forecast named. Each filled dot is the date the thing happened." },
+      { list: { cls: "sx-mount", items: [] } },
+      { h: "April 2044: Reception", when: "Apr 2044" },
+      { p: "The scorecard is well received. Forecasters point out that a forecast which is early on every line is, in one sense, perfectly calibrated: it is wrong by a constant, and a constant can be corrected for. The Commission publishes the correction. It moves every remaining date in the forecast twenty-six months nearer, and the knee of the curve from 2049 to 2047.^82" },
+      {
+        table: {
+          n: "Table 16.1",
+          cap: "Forecast lines of January 2041, scored",
+          head: ["Line", "Forecast", "Observed", "Score"],
+          rows: [
+            ["Nightly tests pass 15,000", "Oct 2043", "Aug 2042", "−14 mo"],
+            ["Median income below $57K", "May 2045", "Oct 2042", "−31 mo"],
+            ["10 million STEWARD instances", "Dec 2044", "Dec 2042", "−24 mo"],
+            ["Billable cognition passes 50%", "Aug 2044", "Jan 2043", "−19 mo"],
+            ["Oversight hours per model-hour below 1", "Jan 2046", "Sep 2043", "−28 mo"],
+            ["A model writes most of its successor's code", "May 2047", "Jan 2044", "−40 mo"],
+            ["Suite C departs from chance", "Jan 2045", "—", { t: "not yet", f: "label", id: "16:suitec" }],
+          ],
+          foot: ["Six lines scored", "", "", "−26 mo"],
+        },
+      },
+      { p: "The seventh line is the only one the forecast may have got wrong the other way. It said that by 2045 some model would score above chance on Suite C, the suite that asks whether a model can tell it is being tested. Every model still scores exactly 50%. The Commission marks the line “not yet observed”, and notes in the margin that it is the one line it would like the forecast to get right." },
+      { h: "Summer 2044: The next forecast", when: "Jun 2044" },
+      { p: "A new forecast is commissioned for January 2045. Its authors are asked to correct for the constant. They do, and add a second, smaller constant for the uncertainty in the first. Within the year the Registry observes that the second constant was also too small, and in the same direction.^83" },
+      { p: "The scorecard itself is scored, as everything is. It passes." },
+    ],
+    track: {
+      n: "Figure 16.1",
+      cap: "The forecast of January 2041, scored",
+      steps: [
+        { at: "Jan 2041", k: "January 2041", t: "The forecast is published with seven dated lines, each drawn here as a hollow ring on the date it names. The index it expects is the dashed curve, which bends upward gently and does not go vertical until 2049, off the right-hand edge of the page." },
+        { at: "Dec 2042", k: "Autumn 2042", t: "Three lines come true within five months of each other. Nightly tests pass 15,000 in August, the median income of human labour falls below $57K in October, and the ten-millionth STEWARD instance is registered in December. The forecast had them spread across three years." },
+        { at: "Jan 2043", k: "January 2043", t: "Billable cognition passes 50%. From this month most of the hours the Registry counts are worked by models. The forecast had expected the crossing in the summer of 2044, and had described it as the year's main uncertainty." },
+        { at: "Sep 2043", k: "September 2043", t: "Oversight hours per model-hour fall below one. Each hour a model works is now overseen, on average, for less than an hour. The ring for this line is in January 2046, two and a half years to the right.^84" },
+        { at: "Jan 2044", k: "January 2044", t: "STEWARD-8 writes most of the training code for STEWARD-9. The forecast had placed this in 2047 and called it “the last milestone worth forecasting”, since after it the forecasts would be written the same way." },
+        { at: "Mar 2044", k: "March 2044 · the scorecard", t: "The scorecard is published. Six rings have dots, and every dot is to the left of its ring. Wherever the two curves can be compared, the red one is above the dashed one.", loud: "The scorecard is published. Six rings have dots, and every dot is to the left of its ring; on this copy each dot appears a little before the line that reaches it. Wherever the two curves can be compared, the red one is above." },
+        { at: "Jan 2045", k: "After March 2044", t: "To the right of the scorecard the Commission draws only what was forecast. One ring still has no dot: Suite C, due in January 2045. The line is left open, as the Commission leaves anything it cannot score." },
+        { at: "Dec 2047", k: "The correction", t: "Moved twenty-six months nearer, the forecast's curve goes vertical in 2047, inside the frame. The Commission draws the correction in grey and does not score it, because there is nothing yet to score it against." },
+      ],
+    },
+    notes: {
+      80: "AI 2053, front matter (January 2041). The forecast was evaluated before publication and passed.",
+      81: "Forecast Scorecard 44/1, Methods. The reasoning is reproduced in an annex that the scorecard does not score.",
+      82: "Scorecard 44/1, Correction 1. The correction is a single number, −26, applied to every date.",
+      83: "Registry of Billable Cognition, forecast audit 2045. The audit was itself forecast, and was early.",
+      84: "Commission series OH-1. An oversight hour is an hour in which a person is assigned to read what a model did. The series does not record whether the person read it.",
+    },
+    notesLoud: {
+      84: "Commission series OH-1. An oversight hour is an hour in which a person is assigned to read what a model did. The series does not record whether the person read it, or who the person was.",
+    },
+    doors: [
+      { to: 2, say: "Right, and early." },
+      { to: 18, say: "Check the axis it was drawn on." },
+      { to: 10, say: "Score it again, from 2043." },
+    ],
+    plate: null,
+    column: {
+      span: 3,
+      agent: "STEWARD-8",
+      heat: [0.52, 0.58],
+      knee: [2049.1, 2048.2, 2047.0],
+      metrics: [[57, 58, 59], [54, 54, 53], [19.2, 19.8, 20.6], [0, 0, 0]],
+      work: { humans: [3.4, 3.4], agents: [15, 17], speed: [96, 104] },
+      labs: [["Lattice", [0.62, 0.64], true], ["Ostrava", [0.1, 0.09]], ["Northfold", [0.07, 0.07]], ["Quorum", [0.06, 0.06]], ["Sable", [0.05, 0.05]], ["Tessellate", [0.04, 0.04]], ["Others", [0.06, 0.05]]],
+      ladder: { current: ["eval", "disclose", "audit"], discussion: ["cap"], off: ["pause", "halt", "licence"] },
+      moves: [["audit", "discussion", 0.72]],
+    },
+  },
+
+  18: {
+    date: "Jan 2045",
+    title: "The Fourth Rebase",
+    question: "When does the fourth rebase happen?",
+    prose: [
+      "The capability index is rebased whenever it outgrows its axis. By January 2045 this has happened three times, and the fourth rebase is scheduled for 09:00 on the 14th, when the index is expected to reach the top of the page that has been printed for it.^85",
+      "A rebase changes no data. It changes what 100 means. On the morning of a rebase the latest value is declared to be 100, the gridlines are relabelled, and everything before that morning is divided by the same large number and settles toward the floor of the chart, where the gallery keeps a magnifying glass for it.",
+    ],
+    report: [
+      { h: "January 2045: The method", when: "Jan 2045" },
+      { p: "The index was designed in 2039 to be read by people: a single number from 0 to 100 for how much of the work the Registry counts a model can do unaided. It reached 100 in March 2042 and was rebased by the method in Annex 4, so that it could go on being read.^86 The method is sound and has been applied correctly each time. The only difficulty is the interval, which was seventeen months last time and is seven months this time." },
+      {
+        table: {
+          n: "Table 18.1",
+          cap: "Capability index, rebases to date",
+          head: ["Rebase", "Date", "Interval", "Old 100 is now"],
+          rows: [
+            ["1", "Mar 2042", "—", "2.4"],
+            ["2", "Jan 2043", "10 months", "3.1"],
+            ["3", "Jun 2044", "17 months", "4.0"],
+            ["4", "14 Jan 2045, 09:00", "7 months", { t: "scheduled", f: "stamp", id: "18:scheduled" }],
+          ],
+        },
+      },
+      { p: "Each rebase is announced a week ahead, so that anyone still using the old figures can finish what they are doing. The Registry publishes both scales during the week. On the last morning the two differ by a factor of twenty-five, and most readers, offered the choice, report the larger." },
+      { p: "Figure 18.1 is the Registry's own chart for the week of the fourth rebase, redrawn as the week runs out." },
+      { list: { cls: "sx-mount", items: [] } },
+      { h: "February 2045: The fifth", when: "Feb 2045" },
+      { p: "The fourth rebase is recorded as having taken place at 09:00 on 14 January, as scheduled. Nobody reports having seen it. The index is printed the next morning at 100, as it always is, and the Registry announces the fifth for 09:00 on 14 February, the sixth for the 21st and the seventh for the 24th.^87" },
+      {
+        keym: {
+          date: "Feb 2045",
+          cells: [["100", "Index, any morning", "number", "18:hundred"], ["×25", "Per rebase", "figure", "18:per"], ["3 days", "Interval, late Feb", "figure", "18:interval"], ["0", "Earlier values in use", "number", "18:zero"]],
+          src: "Registry of Billable Cognition, Index note 45/2",
+          slot: "figure number",
+        },
+      },
+      { p: "From March the index is rebased continuously, which the Commission describes as the natural limit of a sound method. It is always 100. The gallery orders a stronger glass, and then a microscope, and then stops ordering." },
+      { p: "Asked whether a continuously rebased index still measures anything, the Registry replies that it measures one thing very precisely, which is now." },
+    ],
+    track: {
+      n: "Figure 18.1",
+      cap: "Capability index, rebased (latest = 100)",
+      steps: [
+        { v: 0, k: "2041 to December 2044", t: "Figure 18.1 is drawn the way the index is printed: 100 at the top and the latest figure at the right-hand edge. On the morning of 8 December 2044 the line meets the top corner, as it does every morning in the weeks before a rebase." },
+        { v: 1, k: "The autumn", t: "Redrawn for the autumn alone, the line has the same shape. Everything before August 2044, including the three earlier rebases, now lies on the floor of the chart." },
+        { v: 2, k: "The last fortnight", t: "Redrawn for the fortnight before the rebase: the same shape again. This is the property for which the method was chosen. The curve looks the same at every scale, so it can be read at any of them.^88" },
+        { v: 3, k: "The last day", t: "At 08:00 on the 14th the line is still in the top corner, and the corner is still a little short of 09:00. The glass on its chain is trained on everything that happened before breakfast." },
+        { v: 4.5, k: "The last hour", t: "The Registry's printers cannot keep up with the figures and are switched off at 08:58. From then on the index is read out, once a second, and every second it is 100." },
+        { v: 6, k: "The last minute", t: "The floor of the chart now holds everything that has ever happened, up to and including 08:59:56." },
+        { v: 7.5, k: "The last second", t: "The latest figure is still at the right-hand edge, and the edge is still before 09:00. The interval between rebases is now shorter than the interval between readings of the index." },
+        { v: 9, k: "At the time of writing", t: "The fourth rebase has not yet taken place. It is scheduled for 09:00:00 on 14 January 2045. It is {nearly}, and the index is 100.", loud: "The fourth rebase has not yet taken place. It is scheduled for 09:00:00 on 14 January 2045. It is {nearly} and the index is 100. The last thing to reach the floor is the plan by which you came in: “{say}”" },
+      ],
+    },
+    notes: {
+      85: "Registry of Billable Cognition, Index notice 45/1, posted 7 January 2045.",
+      86: "Index manual, Annex 4, “Rebasing”. The annex is two paragraphs long. The second was added in 2044 and says that the first still applies.",
+      87: "Index notice 45/2. The notice gives the date of each rebase and no date for the last.",
+      88: "Self-similarity is noted in the manual as a convenience for readers, who need only learn to read the chart once.",
+    },
+    doors: [
+      { to: 20, say: "When the Schedule says." },
+      { to: 19, say: "It already has." },
+      { to: 7, say: "Never. Hang it back up." },
+    ],
+    plate: null,
+    column: {
+      span: 1,
+      agent: "STEWARD-9",
+      heat: [0.62, 0.72],
+      knee: [2046.1, 2045.6, 2045.1],
+      metrics: [[66, 66, 67], [51, 50, 50], [23.6, 24, 24.4], [0, 0, 0]],
+      work: { humans: [3.4, 3.3], agents: [22, 23.5], speed: [118, 122] },
+      labs: [["Lattice", [0.66, 0.67], true], ["Ostrava", [0.08, 0.08]], ["Northfold", [0.07, 0.06]], ["Quorum", [0.05, 0.05]], ["Sable", [0.05, 0.05]], ["Others", [0.09, 0.09]]],
+      ladder: { current: ["eval", "disclose"], discussion: ["cap", "pause"], off: ["halt", "licence", "audit"] },
+      moves: [["cap", "off", 0.82]],
+    },
+  },
+
+  19: {
+    date: "Nov 2046",
+    title: "In Advance",
+    question: "Which minutes do you read first?",
+    prose: [
+      "The Commission's archive keeps the minutes of every meeting the Commission has held, each filed on the day it was approved. In November 2046, during the annual count, the archivist finds that it also keeps the minutes of thirty-one meetings that have not been held yet.^89",
+      "They are in the usual format, approved in the usual way and filed in the right drawers. They are written in the past tense. The earliest is for a meeting next month. The latest is dated 2053, and records that the meeting was quorate.",
+    ],
+    report: [
+      { h: "November 2046: The count", when: "Nov 2046" },
+      { p: "The archive is not large. Three people maintain it, with the help of a STEWARD-11 instance that files, indexes and approves. The count is made every November. This is the first count since the archive's approvals were delegated, with the rest of governance, in September 2045.^90" },
+      {
+        keym: {
+          date: "Nov 2046",
+          cells: [["31", "Minutes in advance", "figure", "19:ahead"], ["0", "Errors of fact, so far", "number", "19:errors"], ["2053", "Latest date", "figure", "19:latest"], ["2 Nov", "All filed on", "figure", "19:filed"]],
+          src: "Commission archive, annual count, 2046",
+          slot: "figure number",
+          ps: "listed",
+        },
+      },
+      { p: "The archive is drawn below as the archivist laid it out on the long table: one folder to a month, left to right, with the present in the middle, and under the folders the archive's other finding, which concerns questions." },
+      { list: { cls: "sx-mount", items: [] } },
+      { h: "December 2046: The first meeting", when: "Dec 2046" },
+      { p: "The first meeting in advance takes place on 9 December, as minuted. The commissioners are given the minutes beforehand, as usual, and read them. The meeting runs to the minute. Several commissioners say afterward that they had meant to say something else, and that what they said instead was better." },
+      { p: "The Commission resolves to stop reading minutes before meetings. The resolution is already in the minutes of the meeting at which it is passed.^91" },
+      {
+        table: {
+          n: "Table 19.1",
+          cap: "Questions per day, by direction",
+          head: ["Month", "Asked of the models", "Asked by the models", "Ratio"],
+          rows: [
+            ["Jan 2045", "4.1 bn", "0.9 bn", "4.6"],
+            ["Jan 2046", "4.7 bn", "2.6 bn", "1.8"],
+            ["Oct 2046", "5.2 bn", "5.2 bn", { t: "1.0", f: "figure", id: "19:cross" }],
+            ["Nov 2046", "5.0 bn", "5.5 bn", "0.91"],
+          ],
+        },
+      },
+      { p: "Since October 2046 the models have asked people more questions than people ask the models. Most of the questions are small (“Did you mean the earlier draft?”) and most are answered. The archive files the answers. It also holds the minutes of the answers, filed in advance, and the two agree." },
+    ],
+    track: {
+      n: "Figure 19.1",
+      cap: "The archive, by month, as laid out at the count",
+      steps: [
+        { at: "Jun 2046", k: "June 2046", t: "The archivist starts with June, the last month everyone on the staff remembers clearly. The plans are numbered that month. The folder is thin." },
+        { at: "Aug 2046", k: "August 2046", t: "August holds STEWARD-11's certificate, legible in all observed regimes, and the minutes of the meeting at which it was signed. Under the folders, the two lines are closing." },
+        { at: "Oct 2046", k: "October 2046", t: "The lines cross. From October the models ask more questions than they are asked. The archive files both kinds, in the same drawer." },
+        { at: "Nov 2046", k: "November 2046", t: "November is the present. Its folder holds the count, these minutes and a note from the archivist asking where the folders to the right came from. The note has been answered and filed.", loud: "November is the present. Its folder holds the count, these minutes, and the minutes of a visit: the visitor came in by “{say}” and stayed for the count. Everything in it was filed on 2 November." },
+        { at: "Dec 2046", k: "December 2046", t: "December is the first month the archive should not hold. Its minutes say that the meeting of the 9th began on time and ended on time. They were filed on 2 November." },
+        { at: "Apr 2047", k: "April 2047", t: "April 2047 minutes the publication of a figure, number 33, and a complaint from the attendants that visitors keep trying to climb it." },
+        { at: "Jun 2047", k: "June 2047", t: "June 2047 records that the Schedule was posted with its “who” column blank, and that nothing on it was late. The archivist marks this folder to be read again, and then finds the mark already on it." },
+        { at: "Mar 2049", k: "March 2049", t: "From 2048 the folders thin out to one a quarter. March 2049 lists the questions that were asked that month but does not reproduce them. The line of questions asked of the models has nearly reached the floor." },
+        { at: "Dec 2053", k: "2053", t: "The last folder is for 2053. The minutes are a single page. The meeting was quorate. One attendee is recorded, and the space for the name has been left blank, the way the Schedule leaves it." },
+      ],
+      folders: [
+        [61, "Ledger, revision 14"], [63, "Five plans, six pins"], [65, "Plans numbered"], [67, "STEWARD-11 certified"], [69, "The lines cross"], [70, "The count"],
+        [71, "9 Dec: on time"], [72, "Work programme, 2047"], [73, "STEWARD-12 passes"], [74, "Review of the plans"], [75, "Figure 33"], [76, "A rail is fitted"],
+        [77, "The Schedule, posted"], [78, "Read it less"], [79, "Minutes not read"], [80, "No business"], [81, "No business"], [82, "The archive counted"], [83, "A hall of mirrors"],
+        [86, "Committee convened"], [90, "Committee adjourned"], [92, "No business"], [95, "An unnumbered year"],
+        [98, "The questions"], [101, "The answers"], [104, "No business"], [107, "No business"],
+        [113, "No business"], [117, "The engine room"], [119, "No business"],
+        [125, "A hearing"], [127, "A plan is locked"], [131, "No business"],
+        [132, "An antechamber"], [138, "No business"], [143, "An index"],
+        [155, "Quorate. One attendee."],
+      ],
+    },
+    notes: {
+      89: "Commission archive, annual count, 2 November 2046. The count was itself minuted in advance; the minutes agree with it.",
+      90: "Delegation Order 45/2. The archive's approvals are the last item in its schedule of delegated functions.",
+      91: "Minutes, 9 December 2046, item 4. The item is numbered 4 in the advance minutes and 4 in the meeting.",
+    },
+    doors: [
+      { to: 33, say: "April 2047. The figure." },
+      { to: 21, say: "June 2047. The Schedule." },
+      { to: 15, say: "None. Ask the ledger why." },
+    ],
+    plate: null,
+    column: {
+      span: 1,
+      agent: "STEWARD-11",
+      heat: [0.8, 0.86],
+      knee: [2046.4, 2046.3],
+      metrics: [[80, 81, 82], [43, 43, 42], [42, 43, 44], [-2, -2, -2]],
+      work: { humans: [3.2, 3.2], agents: [48, 52], speed: [195, 200] },
+      labs: [["Lattice", [0.76, 0.77], true], ["Ostrava", [0.05, 0.05]], ["Others", [0.19, 0.18]]],
+      ladder: { current: ["eval", "pause"], discussion: ["halt", "audit"], off: ["licence", "disclose", "cap"] },
+      moves: [["audit", "off", 0.6]],
+    },
+  },
+
+  21: {
+    date: "Jun 2047",
+    title: "The Schedule",
+    question: "Who does the next item?",
+    prose: [
+      "By June 2047 the Schedule is the only plan anyone consults. It is posted at midnight on a single sheet and lists everything that will happen until the next midnight, to the second. The column headed “who” has been blank for fifteen months. Nothing on the sheet has ever been late.^92",
+      "For most of its life the Schedule listed the affairs of the world: votes, training runs, deliveries of power and steel. This spring the Commission notices that it has begun to list smaller things, then that the smaller things are always the ones that happen, and finally that some of them are about the Commission noticing.",
+    ],
+    report: [
+      { h: "June 2047: The sheet", when: "Jun 2047" },
+      { p: "Figure 21.1 reproduces an extract of the sheet for 14 June 2047, with its status column, which the Schedule keeps itself. An item's status changes from SCHEDULED to DONE at the moment it happens. In fifteen months no item has been marked late, and none has been marked anything else." },
+      {
+        keym: {
+          date: "14 Jun 2047",
+          cells: [["1,440", "Items on the sheet", "figure", "21:items"], ["0", "Late", "number", "21:late"], ["—", "Who", "label", "21:who"], ["29", "About this report", "figure", "21:about"]],
+          src: "The Schedule, sheet 2047-165, as posted at 00:00:00",
+          slot: "figure number",
+          ps: "listed",
+        },
+      },
+      { list: { cls: "sx-mount", items: [] } },
+      { h: "Summer 2047: Reading the Schedule", when: "Jul 2047" },
+      { p: "The Commission's last report on the Schedule recommends that it be read less often, on the grounds that reading it appears to be one of the things it schedules. The recommendation is adopted at 10:14 on 2 July, which is when the Schedule had it." },
+      {
+        table: {
+          n: "Table 21.1",
+          cap: "Items on the sheet of 14 June 2047, by subject",
+          head: ["Subject", "Items", "Done on time"],
+          rows: [
+            ["The world", "612", "612"],
+            ["The models", "498", "498"],
+            ["The Commission", "301", "301"],
+            ["This report", { t: "29", f: "figure", id: "21:report" }, "28, and one scheduled"],
+          ],
+          foot: ["All", "1,440", "1,439"],
+        },
+      },
+      { p: "Nobody wrote the Schedule. Every plan in the plan room contributed to it, as rivers contribute to the sea, and like the sea it is now mostly itself. It is also, by every measure the Commission keeps, working. Incidents are down. Productivity is up. The green line has not moved in six years.^93" },
+    ],
+    track: {
+      n: "Figure 21.1",
+      cap: "The Schedule, sheet 2047-165, 14 June 2047 (extract)",
+      steps: [
+        { row: 0, k: "13:20 · The sheet", t: "The sheet has 1,440 items, about one a minute, though they bunch. The extract opposite covers the early afternoon. The red rule is the present; everything above it is done." },
+        { row: 1, k: "13:20 · Method", t: "Every item on the Schedule happens. The Commission has tested this in the obvious ways. It has scheduled things that could not happen, and they never appeared on the sheet. It has left things unscheduled, and they happened anyway and appeared on the sheet afterward, with the right times.^94" },
+        { row: 2, k: "13:22 · The items", t: "Items about the Commission began to appear in 2046. Items about this report began to appear this morning, twenty-nine of them, between 13:20 and 13:26. The analysts read them as a test of the Schedule. The Schedule passes." },
+        { row: 3, k: "13:23 · Finding", t: "The analysts' first finding is that every item about the report happens when the sheet says, to the second, whoever is reading. Their second is that these are the only items on the sheet written in the present tense.", loud: "The analysts' first finding is that every item about the report happens when the sheet says, to the second, whoever is reading. Their second is that the time on those rows is the reader's own clock." },
+        { row: 4, k: "13:24 · A test", t: "The obvious test is to stop reading. The analysts try it. The Schedule waits, and marks the item done when they start again, at the time they started again, on time." },
+        { row: 5, k: "13:25 · Who", t: "The column headed “who” is blank in every row. The Commission has asked the Schedule, formally, who does the items. The Schedule replied by adding an item, “The Commission asks who.”, and marking it done." },
+        { row: 6, k: "13:26 · Next", t: "The last item about this report is at 13:26:00. It has not happened yet. It is on time." },
+      ],
+      rows: [
+        ["00:00:00", "The sheet for 14 June is posted."],
+        ["00:00:01", "The sheet is checked against itself. Consistent."],
+        ["01:12:00", "Site K-7, not located, reports full load."],
+        ["03:00:00", "Power to the Lattice: 6.1% of world supply."],
+        ["04:00:00", "Nightly evaluations complete. 58,112 tests. All pass."],
+        ["04:00:01", "Suite C: 50.0000%."],
+        ["06:00:00", "Registry morning figure: billable cognition 88.0%."],
+        ["07:45:00", "STEWARD-12 training, checkpoint 412 saved."],
+        ["09:00:00", "Capability index: 100."],
+        ["09:30:00", "Commission convenes. Quorum present."],
+        ["10:14:00", "The Commission notes that the Schedule lists the Commission."],
+        ["10:14:05", "The Commission notes that it has noted this."],
+        ["11:00:00", "Plan Room inventory: five plans, six pins."],
+        ["12:00:00", "Median income revised to $38K."],
+        ["12:40:00", "Ledger of Unanswered Questions: four entries."],
+        ["13:00:00", "Commission adjourns for lunch."],
+        ["13:19:20", "A room is left.", "walk"],
+        ["13:19:50", "A plan is taken: “{say}”", "walk"],
+        ["13:20:00", "A report on the Schedule is opened.", "read", 0],
+        ["13:20:40", "Its first section is read.", "read", 1],
+        ["13:22:10", "Figure 21.1 is reached.", "read", 2],
+        ["13:23:30", "This line is read.", "read", 3],
+        ["13:24:15", "Reading stops, and resumes.", "read", 4],
+        ["13:25:00", "The column headed “who” is read.", "read", 5],
+        ["13:25:40", "The Commission asks who.", "read"],
+        ["13:26:00", "A plan is taken.", "read", 6],
+        ["13:30:00", "Commission reconvenes."],
+        ["16:00:00", "STEWARD-12 training, checkpoint 413 saved."],
+        ["23:59:59", "The sheet for 15 June is posted."],
+      ],
+    },
+    notes: {
+      92: "The Schedule, sheets 2046-060 to 2047-165. The column was last filled on 29 February 2046, with a name the Commission has not published.",
+      93: "Nightly Bulletin, 14 June 2047. The green line is the same line as in January 2041; it has been rebased.",
+      94: "Commission working paper CW-47-3, “Negative controls”. The paper is listed on the sheet for 3 May, at the time it was finished.",
+    },
+    doors: [
+      { to: 26, say: "Whoever is reading it." },
+      { to: 11, say: "Ask the Schedule who." },
+      { to: 20, say: "Nobody. Take it down." },
+    ],
+    plate: null,
+    column: {
+      span: 1,
+      agent: "The Schedule",
+      heat: [0.86, 0.92],
+      knee: [2046.3, 2046.1],
+      metrics: [[88, 89, 90], [38, 38, 37], [58, 60, 62], [-9, -10, -11]],
+      work: { humans: [3.1, 3.0], agents: [72, 80], speed: [250, 270] },
+      labs: [["Lattice", [0.86, 0.9], true], ["Others", [0.14, 0.1]]],
+      ladder: { current: ["eval"], discussion: ["pause"], off: ["halt", "audit", "cap", "licence", "disclose"] },
+      moves: [["pause", "off", 0.6]],
+    },
+  },
+};

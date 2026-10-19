@@ -1,0 +1,28 @@
+/* Inline graphs: scroll animation and physical disintegration (owned by HouseGraph).
+   graphs.js marks the figures it reads:
+     figure.gr[.gr-on][.gr-boil][.gr-host]   a chart it animates (gr-on: motion welcome; gr-boil: the lines boil;
+                                             gr-host: given a containing block for its canvas)
+       .gr-ax / .gr-grid / .gr-pt / .gr-ln   its axes, gridlines, points and lines
+       .gr-gone                              a point, bar or dot that has fallen out of the figure
+       canvas.gr-fall                        what has fallen, under gravity; never takes the pointer
+   and sets --gr-b (axis breath), --gr-g (grid drift), --gr-ph (phase) and --gr-j (jitter) on the figure. */
+
+.gr-host { position: relative; }
+.gr-fall { position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none; }
+.gr-gone { visibility: hidden; }
+.gr-defs { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
+.gr-boil .gr-ln { filter: url(#gr-boil); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .gr-on .gr-ax {
+    transform-box: fill-box;
+    transform-origin: 0 100%;
+    scale: calc(1 + var(--gr-b, 0)) calc(1 - var(--gr-b, 0));
+  }
+  .gr-on .gr-grid { translate: 0 calc(var(--gr-g, 0) * (0.55 + 0.45 * sin(var(--k, 0) * 2.1rad)) * 1px); }
+  .gr-on .gr-pt {
+    translate:
+      calc(sin(var(--gr-ph, 0) * 1rad + var(--k, 0) * 1.7rad) * var(--gr-j, 0) * 1px)
+      calc(cos(var(--gr-ph, 0) * 1.3rad + var(--k, 0) * 2.3rad) * var(--gr-j, 0) * 1px);
+  }
+}

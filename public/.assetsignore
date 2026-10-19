@@ -1,0 +1,6 @@
+# Not deployed: config files, card/icon sources, and the full-size originals
+# that public/media/eng/ is derived from.
+_headers
+_redirects
+media/og/*.html
+shared/media/

@@ -1,0 +1,77 @@
+{
+ "note": "The author's own AI-generated images (originals of the plate derivatives in /media/eng). Third-party MAZE (Christopher Manson, 1985) plates were reference only and are not included.",
+ "assets": [
+  {
+   "file": "jade-maze-priestess.jpg",
+   "origin": "Stable Diffusion (local), eibg/old",
+   "size": [
+    768,
+    768
+   ]
+  },
+  {
+   "file": "jade-maze-open-arms.jpg",
+   "origin": "Stable Diffusion (local), eibg/old",
+   "size": [
+    768,
+    768
+   ]
+  },
+  {
+   "file": "jade-maze-temple.jpg",
+   "origin": "Stable Diffusion (local), eibg/old",
+   "size": [
+    768,
+    768
+   ]
+  },
+  {
+   "file": "jade-maze-portrait.jpg",
+   "origin": "Stable Diffusion (local), eibg/old",
+   "size": [
+    768,
+    768
+   ]
+  },
+  {
+   "file": "jade-maze-elder.jpg",
+   "origin": "Stable Diffusion (local), eibg/old",
+   "size": [
+    768,
+    768
+   ]
+  },
+  {
+   "file": "void-loop-vortex.jpg",
+   "origin": "owner card art (Void Loop 71)",
+   "size": [
+    1024,
+    1371
+   ]
+  },
+  {
+   "file": "void-loop-71-card.jpg",
+   "origin": "Eden, hypotheticards collection by jmill",
+   "size": [
+    1073,
+    1600
+   ]
+  },
+  {
+   "file": "maze-abyss.jpg",
+   "origin": "Eden, 'create by jmill', Garden of Eden",
+   "size": [
+    1024,
+    1024
+   ]
+  },
+  {
+   "file": "mulabonding-grid.jpg",
+   "origin": "flux_dev via Eden",
+   "size": [
+    1024,
+    1024
+   ]
+  }
+ ]
+}

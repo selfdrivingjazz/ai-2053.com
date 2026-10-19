@@ -1,0 +1,99 @@
+/* Living plans (living.js): plans that have left the list and live in the page.
+   No highlight, no marker: at rest a surface reads as the text it is, with at most
+   a typographic tell (a hairline, lining figures). Hover and focus show it. Every
+   surface is at least ~32px tall to a finger. */
+
+.plan-in {
+  color: inherit;
+  text-decoration: none;
+  /* The hit area grows without moving the line. */
+  padding-block: max(0.36em, calc(16px - 0.58em));
+  margin-block: min(-0.36em, calc(0.58em - 16px));
+  border-radius: 2px;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.18s, text-decoration-color 0.18s, background-color 0.18s;
+}
+.plan-in:hover { color: var(--accent, #b4121b); }
+.plan-in:focus-visible { outline: 2px solid var(--accent, #b4121b); outline-offset: 2px; color: var(--accent, #b4121b); }
+
+/* a word, a "Room N", a figure in the text: a hairline you might not notice */
+.li-word, .li-room, .li-num, .li-sf, .li-slot {
+  text-decoration: underline 1px;
+  text-decoration-color: color-mix(in srgb, currentColor 13%, transparent);
+  text-underline-offset: 0.22em;
+}
+.li-word:hover, .li-room:hover, .li-num:hover, .li-sf:hover, .li-slot:hover,
+.li-word:focus-visible, .li-room:focus-visible, .li-num:focus-visible, .li-sf:focus-visible, .li-slot:focus-visible {
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 1.5px;
+}
+.li-num, .li-room { font-variant-numeric: lining-nums; }
+.li-sf { font-style: italic; }
+
+/* a footnote marker: it looks like every other footnote */
+sup.li-fn a.plan-in { position: relative; padding: 0; margin: 0; color: var(--accent, #b4121b); }
+sup.li-fn a.plan-in::before { content: ""; position: absolute; inset: -14px -12px; }
+
+/* a note in the notes */
+.li-note .plan-in { font-style: italic; }
+
+/* a sidenote, as AI 2040 sets them */
+.li-margin { float: right; clear: right; width: min(30%, 190px); margin: 6px 0 14px 24px; font-size: 14px; line-height: 20px; color: #444; }
+.li-margin.li-left { float: left; clear: left; margin: 6px 24px 14px 0; }
+.li-margin .plan-in { display: block; padding: 6px 0; margin: -6px 0; }
+.li-mn { margin-right: 0.3em; font: 700 11px/1 var(--mono, ui-monospace, monospace); color: var(--accent, #b4121b); font-variant-numeric: lining-nums; }
+
+/* the report's signature */
+.li-sig { max-width: 700px; margin: 40px 0 0; font-size: 16px; line-height: 24px; font-style: italic; color: #555; }
+.li-sig::before { content: "— "; }
+.li-sig .plan-in { font-style: normal; font-variant: small-caps; letter-spacing: 0.04em; font-variant-numeric: lining-nums; display: inline-block; padding: 4px 2px; margin: -4px -2px; }
+
+/* a data point on a chart */
+.li-host { position: relative; }
+.plan-in.li-pt {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  min-width: 32px;
+  min-height: 32px;
+  margin: 0;
+  padding: 0;
+  translate: -16px -16px;
+  justify-content: flex-start;
+  padding-left: 11px;
+}
+.li-dot { flex: none; width: 9px; height: 9px; margin-left: -4px; border: 1.5px solid var(--accent, #b4121b); border-radius: 50%; background: var(--paper, #fffff8); }
+.li-pl { font: 9px/1 var(--mono, ui-monospace, monospace); color: #444; translate: 0 -7px; }
+.plan-in.li-pt:hover .li-dot, .plan-in.li-pt:focus-visible .li-dot { background: var(--accent, #b4121b); }
+
+/* a carried fragment that is a plan */
+.plan-in.li-cf { padding: 0.3em 0; margin: -0.3em 0; }
+.plan-in.li-cf:hover .cf, .plan-in.li-cf:focus-visible .cf { --cf-ink: var(--accent, #b4121b); }
+.cf-on-plate .plan-in, .cf-on-col .plan-in { pointer-events: auto; }
+
+
+/* dark rooms */
+html[data-grammar="void"] .li-sig, html[data-grammar="centre"] .c-night .li-sig { color: #9a9a90; }
+html[data-grammar="void"] .li-margin { color: #b9b9b0; }
+html[data-grammar="void"] .li-dot { background: #0a0a09; }
+
+@media (max-width: 860px) {
+  .li-margin, .li-margin.li-left { float: none; width: auto; margin: 4px 0 18px; padding-left: 12px; border-left: 1px solid rgba(17, 17, 17, 0.2); }
+  .plan-in { padding-block: max(0.42em, calc(16px - 0.58em)); margin-block: min(-0.42em, calc(0.58em - 16px)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-in { transition: none; }
+}
+
+/* Owner: a plan living in the text is findable by reading. It is set in the
+   house's crimson with a dotted underline, the way AI 2040 sets its footnote
+   numbers: no label, no instruction, but never a hairline you cannot see. */
+main .plan-in { color: var(--accent, #b4121b); text-decoration: underline dotted 1.5px; text-decoration-color: color-mix(in srgb, var(--accent, #b4121b) 70%, transparent); text-underline-offset: 0.2em; }
+main .plan-in:hover, main .plan-in:focus-visible { text-decoration-style: solid; }
+html[data-grammar="void"] main .plan-in, html[data-grammar="centre"] main .plan-in { color: #ff5a4f; }
+main .plan-in { cursor: pointer; }

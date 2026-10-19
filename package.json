@@ -1,0 +1,15 @@
+{
+  "name": "ai-2053.com",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AI 2053: The House of 2053, an interactive fiction.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && for f in public/house/*.js; do node --check \"$f\" || exit 1; done"
+  }
+}

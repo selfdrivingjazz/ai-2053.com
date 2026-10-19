@@ -1,0 +1,199 @@
+/* Visual scars carried between rooms (owned by HouseScars). Drawn by scars.js.
+   Nothing here is interactive: every layer is aria-hidden, pointer-events: none,
+   and sits at z-index 0, under the plans (z-index 6). Motion comes only from
+   scroll (--sc-v velocity −1..1, --sc-p depth 0..1); there are no animations. */
+
+.sc-page, .sc-view {
+  --sc-ink: 17, 17, 17;
+  --sc-void: 10, 10, 9;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  z-index: 0;
+  overflow: clip;
+}
+.sc-page.sc-dark, .sc-view.sc-dark { --sc-ink: 233, 233, 223; --sc-void: 233, 233, 223; }
+
+/* document-tied: over the whole room, from the viewport's left edge to its right */
+.sc-page {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * var(--sc-ml, 0px));
+  right: calc(-1 * var(--sc-mr, 0px));
+}
+/* No blend modes: a blended layer the height of the room made every scroll frame
+   recomposite the whole page on phones. Scars are faint enough to sit over ink as plain alpha. */
+.sc-page > * { position: absolute; display: block; pointer-events: none; }
+
+/* viewport-tied */
+.sc-view { position: fixed; inset: 0; }
+.sc-view > * { position: absolute; pointer-events: none; }
+.sc-page svg, .sc-view svg { display: block; overflow: visible; }
+
+/* report rooms: halftone bleed */
+.sc-ht canvas { display: block; }
+
+/* 26: reversed show-through */
+.sc-mirror {
+  height: 44px;
+  overflow: clip;
+  background: linear-gradient(transparent, rgba(var(--sc-ink), calc(var(--a) * 0.035)) 30% 70%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12% 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12% 88%, transparent);
+}
+.sc-mirror-t {
+  display: block;
+  white-space: nowrap;
+  font: 400 24px/44px var(--serif);
+  letter-spacing: 0.01em;
+  color: rgba(var(--sc-ink), calc(0.07 + var(--a) * 0.13));
+  transform: scaleX(-1) translateX(calc(var(--k) * 40px)); /* static: a moving transform here re-layerized the page every frame */
+  text-shadow: 0 0 1px rgba(var(--sc-ink), calc(var(--a) * 0.12)); /* soft, without a filter layer */
+}
+.sc-mirror-t.sc-flip-y { transform: scale(-1, -1) translateX(calc(var(--k) * 40px)); }
+
+/* 31: the 1997 tile through a tear */
+.sc-tile { filter: drop-shadow(0 0 0.6px rgba(0, 0, 0, 0.5)) drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.08)); }
+.sc-tile-in {
+  position: absolute;
+  inset: 0;
+  background: #eeeefc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='84'%3E%3Crect width='84' height='84' fill='%23eeeefc'/%3E%3Ctext x='10' y='26' font-family='Times New Roman,serif' font-size='17' fill='%235f69d6'%3E%E2%9C%BA%3C/text%3E%3Ctext x='52' y='68' font-family='Times New Roman,serif' font-size='16' fill='%23c76464'%3E9%3C/text%3E%3C/svg%3E");
+  background-size: 84px 84px;
+}
+
+/* 11: blank bars */
+.sc-bar { height: 11px; background: rgba(var(--sc-ink), var(--a)); }
+
+/* 38: the trace */
+.sc-trace { left: 0; width: 100%; overflow: clip; opacity: calc(0.35 + var(--a) * 0.5); }
+.sc-trace svg { will-change: transform; }
+.sc-trace-line { fill: none; stroke: rgba(214, 52, 38, 0.62); stroke-width: 1.1; stroke-linejoin: round; }
+.sc-trace-glow { fill: none; stroke: rgba(255, 92, 70, 0.12); stroke-width: 6; stroke-linejoin: round; }
+.sc-trace-tick { fill: none; stroke: rgba(var(--sc-ink), 0.18); stroke-width: 0.8; }
+
+/* 44: the well, pressed in */
+.sc-well { opacity: calc(0.16 + var(--a) * 0.4); }
+.sc-well circle { fill: none; stroke: rgb(var(--sc-ink)); }
+.sc-well svg { transform-origin: 50% 50%; transform: scale(calc(1 - var(--sc-p, 0) * 0.16)); }
+.sc-well .sc-well-coin { fill: rgba(180, 18, 27, 0.7); stroke: none; }
+
+/* 71: the void's edge */
+.sc-edge { left: 0; top: 0; height: 100%; transform-origin: 0 50%; transform: scaleX(calc(var(--b) + var(--sc-p, 0) * var(--c))); will-change: transform; }
+.sc-edge-r { left: auto; right: 0; transform-origin: 100% 50%; }
+.sc-edge-r svg { transform: scaleX(-1); }
+.sc-edge-fill { fill: rgb(var(--sc-void)); }
+
+/* 45: crop marks round nothing; rules with pieces missing */
+.sc-crop {
+  --c: rgba(var(--sc-ink), calc(0.25 + var(--a) * 0.5));
+  background:
+    linear-gradient(var(--c), var(--c)) 0 0 / 16px 1px,
+    linear-gradient(var(--c), var(--c)) 0 0 / 1px 16px,
+    linear-gradient(var(--c), var(--c)) 100% 0 / 16px 1px,
+    linear-gradient(var(--c), var(--c)) 100% 0 / 1px 16px,
+    linear-gradient(var(--c), var(--c)) 0 100% / 16px 1px,
+    linear-gradient(var(--c), var(--c)) 0 100% / 1px 16px,
+    linear-gradient(var(--c), var(--c)) 100% 100% / 16px 1px,
+    linear-gradient(var(--c), var(--c)) 100% 100% / 1px 16px;
+  background-repeat: no-repeat;
+  outline: 1px dashed rgba(var(--sc-ink), calc(var(--a) * 0.1));
+  outline-offset: -9px;
+}
+.sc-erase .room-head .rule, .sc-erase > .notes {
+  -webkit-mask-image: linear-gradient(90deg, #000 var(--sc-e1), transparent var(--sc-e1) var(--sc-e2), #000 var(--sc-e2));
+  mask-image: linear-gradient(90deg, #000 var(--sc-e1), transparent var(--sc-e1) var(--sc-e2), #000 var(--sc-e2));
+  -webkit-mask-size: 100% 2px;
+  mask-size: 100% 2px;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+/* the notes keep their words: only their top rule is cut */
+.sc-erase > .notes { -webkit-mask-image: linear-gradient(90deg, #000 var(--sc-e1), transparent var(--sc-e1) var(--sc-e2), #000 var(--sc-e2)), linear-gradient(#000, #000); mask-image: linear-gradient(90deg, #000 var(--sc-e1), transparent var(--sc-e1) var(--sc-e2), #000 var(--sc-e2)), linear-gradient(#000, #000); -webkit-mask-size: 100% 1px, 100% 100%; mask-size: 100% 1px, 100% 100%; -webkit-mask-position: 0 0, 0 1px; mask-position: 0 0, 0 1px; }
+
+/* 17: punch holes and a staple */
+.sc-hole {
+  border-radius: 50%;
+  background: radial-gradient(circle at 46% 42%, rgba(var(--sc-ink), calc(var(--a) * 0.62)) 0 58%, rgba(var(--sc-ink), calc(var(--a) * 0.3)) 74%, transparent 76%);
+  box-shadow: 0 0 0 1px rgba(var(--sc-ink), calc(var(--a) * 0.1)), 1px 1px 2px rgba(var(--sc-ink), calc(var(--a) * 0.14));
+}
+.sc-staple {
+  width: 22px;
+  height: 3px;
+  border-radius: 1px;
+  background: linear-gradient(90deg, rgba(96, 88, 76, var(--a)) 0 3px, rgba(140, 130, 116, calc(var(--a) * 0.75)) 3px calc(100% - 3px), rgba(96, 88, 76, var(--a)) calc(100% - 3px));
+  box-shadow: 0 1px 0 rgba(122, 106, 68, calc(var(--a) * 0.35)), 0 6px 7px -3px rgba(122, 106, 68, calc(var(--a) * 0.28));
+}
+
+/* 52: thumb-index notches */
+.sc-notch { border-radius: 9px 0 0 9px; background: rgba(var(--sc-ink), var(--a)); box-shadow: inset 2px 0 3px rgba(0, 0, 0, 0.25); }
+
+/* 2054: afterimage */
+.sc-glow { border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 160, 176, calc(var(--a) * 0.16)), transparent); }
+
+/* heading and rule shadows (slip, afterimage), driven by --sc-v on .room-head */
+.sc-h .room-head h1 { text-shadow: var(--sc-h1); }
+.sc-h .room-head .rule { box-shadow: var(--sc-rule); }
+
+/* 53: dusk at the foot */
+.sc-dusk { left: 0; right: 0; bottom: 0; height: 30vh; background: linear-gradient(to top, rgba(14, 14, 30, calc(0.03 + var(--a) * (0.06 + var(--sc-p, 0) * 0.12))), transparent); }
+.sc-dusk::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(180, 18, 27, calc(var(--a) * 0.14)) 20% 80%, transparent); }
+
+/* 33: the corridor */
+.sc-corr { inset: 0; opacity: calc(0.4 + var(--a) * 0.6); }
+.sc-corr-ray { fill: none; stroke: rgba(var(--sc-ink), 0.16); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.sc-corr-frame { position: absolute; inset: 0; border: 1px solid rgba(var(--sc-ink), 0.26); will-change: transform, opacity; }
+
+/* 36: the volvelle */
+.sc-wheel { left: var(--off); opacity: calc(0.3 + var(--a) * 0.6); }
+.sc-wheel-svg { transform-origin: 50% 50%; will-change: transform; }
+.sc-wheel-r { left: auto; right: var(--off); }
+.sc-wheel-ring { fill: none; stroke: rgba(var(--sc-ink), 0.16); stroke-width: 0.5; }
+.sc-wheel-l { font: 8px var(--serif); fill: rgba(180, 18, 27, 0.34); text-anchor: middle; }
+
+/* 64: ledger ruling */
+.sc-ledger {
+  background:
+    linear-gradient(90deg, transparent calc(var(--m) - 1px), rgba(196, 40, 40, calc(var(--a) * 0.32)) calc(var(--m) - 1px) var(--m), transparent var(--m) calc(var(--m) + 3px), rgba(196, 40, 40, calc(var(--a) * 0.32)) calc(var(--m) + 3px) calc(var(--m) + 4px), transparent calc(var(--m) + 4px)),
+    repeating-linear-gradient(transparent 0 29px, rgba(70, 110, 175, calc(var(--a) * 0.3)) 29px 30px);
+  -webkit-mask-image: linear-gradient(transparent, #000 12% 88%, transparent);
+  mask-image: linear-gradient(transparent, #000 12% 88%, transparent);
+}
+
+/* 81: revision bars */
+.sc-cb { width: 2px; background: rgba(var(--sc-ink), var(--a)); }
+.sc-cb-2 { width: 6px; background: linear-gradient(90deg, rgba(var(--sc-ink), var(--a)) 0 2px, transparent 2px 4px, rgba(var(--sc-ink), var(--a)) 4px); }
+
+/* 88: a crease and a dog-ear */
+.sc-crease {
+  left: 0;
+  right: 0;
+  height: 44px;
+  margin-top: -22px;
+  background: linear-gradient(transparent, rgba(60, 50, 30, calc(0.02 + var(--a) * 0.04)) 30%, rgba(60, 50, 30, calc(0.05 + var(--a) * 0.1)) 48%, rgba(40, 32, 20, calc(0.22 + var(--a) * 0.4)) 50%, rgba(60, 50, 30, 0.02) 52%, rgba(60, 50, 30, calc(0.02 + var(--a) * 0.05)) 62%, transparent 85%);
+}
+.sc-ear {
+  background: linear-gradient(135deg, rgba(60, 50, 30, calc(0.08 + var(--a) * 0.2)) 0 49%, rgba(60, 50, 30, calc(0.25 + var(--a) * 0.4)) 50%, rgba(60, 50, 30, calc(0.03 + var(--a) * 0.06)) 52%, transparent 80%);
+}
+
+/* 40: the scan band */
+.sc-scan {
+  left: 0;
+  right: 0;
+  top: 0;
+  background: repeating-linear-gradient(transparent 0 2px, rgba(var(--sc-ink), calc(0.05 + var(--a) * 0.12)) 2px 3px), linear-gradient(90deg, rgba(180, 18, 27, calc(0.03 + var(--a) * 0.08)), rgba(0, 140, 170, calc(0.03 + var(--a) * 0.08)));
+  will-change: transform, opacity;
+}
+
+/* 48: copier streak and the manila folder */
+.sc-streak {
+  top: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(rgba(var(--sc-ink), calc(var(--a) * 0.1)) 0 13px, rgba(var(--sc-ink), calc(var(--a) * 0.04)) 13px 17px, rgba(var(--sc-ink), calc(var(--a) * 0.13)) 17px 41px, rgba(var(--sc-ink), calc(var(--a) * 0.06)) 41px 47px);
+  box-shadow: 9px 0 0 -8px rgba(var(--sc-ink), calc(var(--a) * 0.1));
+}
+.sc-manila { left: 0; top: 0; bottom: 0; background: rgba(232, 227, 211, calc(0.5 + var(--a) * 0.5)); box-shadow: 1px 0 0 rgba(122, 106, 68, calc(var(--a) * 0.3)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-trace svg, .sc-scan, .sc-edge, .sc-corr-frame, .sc-wheel-svg { will-change: auto; }
+}

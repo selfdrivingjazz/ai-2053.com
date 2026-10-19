@@ -1,0 +1,237 @@
+/* The house's contamination.
+   1. Carried fragments (.cf, placed by chaos.js): pieces of other rooms, printed
+      into this one out of register. Each keeps the room it came from (a crimson
+      mark) and goes further out of register each time it turns up (--cf-n).
+      Hover, focus or tap (living.js toggles .is-open) pulls it back into register
+      and says where it came from.
+   2. The voice's forms (voice.js): leaking redactions, swapped words, weathered
+      ink, figures that became dates in the walk, sentences finished by the
+      previous plan, sentences still set in the last room's grammar, register
+      drift and bleeding footnotes.
+   Room stylesheets may restyle all of these inside their own grammar. */
+
+.room { position: relative; }
+
+/* ---------- 1 · carried fragments: printed out of register ---------- */
+
+.cf {
+  --cf-ink: #111;
+  --cf-red: #b4121b;
+  --cf-off: calc(var(--cf-n, 1) * 0.035em + 0.04em);
+  display: inline;
+  position: relative;
+  color: var(--cf-ink);
+  background: linear-gradient(transparent 58%, color-mix(in srgb, var(--cf-red) calc(4% + var(--cf-n, 1) * 2%), transparent) 58% 92%, transparent 92%);
+  text-shadow: var(--cf-off) calc(var(--cf-off) * 0.6) 0 color-mix(in srgb, var(--cf-red) 42%, transparent);
+  padding: 0 0.12em;
+  font-style: normal;
+  rotate: var(--cf-r, 0deg);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  transition: text-shadow 0.35s ease, rotate 0.35s ease;
+}
+/* where it came from */
+.cf::after {
+  content: attr(data-cf-from);
+  font: 9px/1 var(--mono, ui-monospace, SFMono-Regular, Menlo, Consolas, monospace);
+  color: var(--cf-red);
+  vertical-align: super;
+  margin-left: 0.2em;
+  text-shadow: none;
+  letter-spacing: 0;
+  font-style: normal;
+  font-weight: 400;
+  text-transform: none;
+}
+.cf:hover, .cf.is-open, a:focus-visible > .cf { text-shadow: none; rotate: 0deg; }
+.cf:hover::after, .cf.is-open::after, a:focus-visible > .cf::after { content: "← Room " attr(data-cf-from); }
+/* stuck for good: the misregistration has dried into the paper */
+.cf-stuck { background: linear-gradient(transparent 58%, color-mix(in srgb, var(--cf-red) 14%, transparent) 58% 92%, transparent 92%); }
+
+/* kinds */
+.cf-line { font: italic 0.92em/1.3 var(--serif, "ET Book", Palatino, Georgia, serif); }
+/* an old token, carried: it arrives as a leaking redaction */
+.cf-token { color: transparent; background: linear-gradient(var(--cf-ink), var(--cf-ink)) 0 58% / 100% 0.62em no-repeat; text-shadow: 0 -0.32em 0 color-mix(in srgb, var(--cf-ink) 70%, transparent); font: 0.86em var(--mono, ui-monospace, monospace); }
+.cf-token:hover, .cf-token.is-open, a:focus-visible > .cf-token { color: var(--cf-red); background-size: 100% 1px; text-shadow: none; }
+.cf-label { font: 700 0.7em var(--mono, ui-monospace, monospace); letter-spacing: 0.06em; text-transform: uppercase; }
+.cf-stamp {
+  font: 700 0.7em var(--mono, ui-monospace, monospace);
+  letter-spacing: 0.12em;
+  color: var(--cf-red);
+  border: 2px solid var(--cf-red);
+  background: none;
+  text-transform: uppercase;
+  text-shadow: none;
+  /* uneven ink: the stamp was pressed harder on one side */
+  -webkit-mask-image: linear-gradient(calc(var(--cf-r, 0deg) * 20 + 100deg), #000 40%, rgba(0, 0, 0, 0.55) 70%, #000 92%);
+  mask-image: linear-gradient(calc(var(--cf-r, 0deg) * 20 + 100deg), #000 40%, rgba(0, 0, 0, 0.55) 70%, #000 92%);
+}
+.cf-figure { display: inline-flex; flex-direction: column; align-items: center; font: 700 15px/1.1 var(--mono, ui-monospace, monospace); padding: 4px 8px; vertical-align: middle; background: none; border-left: 1px solid color-mix(in srgb, var(--cf-ink) 40%, transparent); }
+.cf-figure small, .cf-curve small { font: 400 9px/1.2 var(--mono, ui-monospace, monospace); letter-spacing: 0.04em; color: #555; text-shadow: none; }
+.cf-curve { display: inline-flex; flex-direction: column; width: 130px; padding: 4px 6px; vertical-align: middle; background: none; }
+.cf-curve svg { width: 100%; height: auto; overflow: visible; filter: drop-shadow(var(--cf-off) var(--cf-off) 0 color-mix(in srgb, var(--cf-red) 30%, transparent)); }
+.cf-curve polyline { fill: none; stroke: var(--cf-red); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.cf-number { display: inline-block; font: 400 calc(48px + var(--cf-n, 1) * 10px)/0.9 var(--serif, "ET Book", Georgia, serif); font-variant-numeric: lining-nums; color: color-mix(in srgb, var(--cf-red) 70%, transparent); background: none; text-shadow: calc(var(--cf-off) * 3) calc(var(--cf-off) * 2) 0 color-mix(in srgb, var(--cf-ink) 22%, transparent); }
+/* a plan from somewhere else: its words, struck */
+.cf-plan { display: inline; padding: 0 0.3em; background: none; text-shadow: none; text-decoration: line-through 1px color-mix(in srgb, var(--cf-red) 70%, transparent); }
+.cf-plan b { font: 700 0.62em var(--mono, ui-monospace, monospace); letter-spacing: 0.08em; margin-right: 0.4em; }
+.cf-plan i { font: italic 0.92em/1.3 var(--serif, "ET Book", Georgia, serif); color: #444; }
+
+/* where they land */
+.cf-margin { float: right; clear: right; width: min(36%, 220px); margin: 4px 0 12px 22px; font-size: 16px; line-height: 22px; }
+.cf-margin.cf-left { float: left; clear: left; margin: 4px 22px 12px 0; }
+.cf-margin .cf { display: inline-block; }
+.cf-note { list-style: "↳ "; }
+.cf-on-plate { position: absolute; left: var(--x); top: var(--y); z-index: 2; pointer-events: none; max-width: 60%; font-size: 15px; }
+.cf-on-col { position: absolute; left: var(--x); top: var(--y); z-index: 3; pointer-events: none; max-width: 70%; font-size: 13px; }
+.cf-plans { margin: 14px 0 0; display: flex; justify-content: center; }
+
+/* arrival: followers are printed a moment late; stuck ones are simply there */
+@media (prefers-reduced-motion: no-preference) {
+  .cf-follow { animation: cf-in 1.4s cubic-bezier(.2, .7, .2, 1) both; animation-delay: .6s; }
+  @keyframes cf-in { from { opacity: 0; text-shadow: 0.6em 0.3em 0 transparent; } }
+}
+
+/* ---------- 2 · the voice's forms ---------- */
+
+/* A redaction that leaks: the bar covers the x-height only, so ascenders and
+   descenders show above and below it. Lean on it and the bar thins to a strike. */
+.rx {
+  --rx-ink: #111;
+  --rx-leak: #b4121b;
+  color: var(--rx-ink);
+  background: linear-gradient(var(--rx-ink), var(--rx-ink)) 0 62% / 100% 0.5em no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: 0 0.08em;
+  border-radius: 1px;
+  transition: background-size 0.4s ease, color 0.4s ease;
+}
+.rx .rx-t { color: inherit; }
+.rx:hover, .rx:focus-visible, .rx.is-open { background-size: 100% 1px; color: var(--rx-leak); }
+.rx:focus-visible { outline: 2px solid var(--accent, #b4121b); outline-offset: 2px; }
+.rx[data-from]:hover::after, .rx[data-from]:focus-visible::after, .rx[data-from].is-open::after { content: "← " attr(data-from); }
+
+/* provenance marks shared by the forms that came from somewhere */
+.sw::after, .wd::after, .sf::after, .gx::after, .rx[data-from]::after {
+  font: 400 9px/0 var(--mono, ui-monospace, monospace);
+  font-style: normal;
+  letter-spacing: 0;
+  color: var(--accent, #b4121b);
+  vertical-align: super;
+  margin-left: 0.15em;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+/* A word swapped with its neighbour in the room the reader came from. It sits a
+   hair off the baseline; touched, it says what it replaced. */
+.sw { position: relative; top: 0.05em; letter-spacing: 0.015em; }
+.sw:hover::after, .sw.is-open::after { content: attr(data-was) " ← " attr(data-from); text-decoration: line-through 1px; }
+
+/* Weathering: the word is losing its ink along a crease. */
+.wx {
+  -webkit-mask-image: linear-gradient(var(--wx, 90deg), #000 18%, rgba(0, 0, 0, 0.32) 38%, #000 52%, rgba(0, 0, 0, 0.55) 74%, #000 86%);
+  mask-image: linear-gradient(var(--wx, 90deg), #000 18%, rgba(0, 0, 0, 0.32) 38%, #000 52%, rgba(0, 0, 0, 0.55) 74%, #000 86%);
+}
+.wx-2 {
+  -webkit-mask-image: linear-gradient(var(--wx, 90deg), rgba(0, 0, 0, 0.6) 10%, rgba(0, 0, 0, 0.16) 34%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.14) 72%, rgba(0, 0, 0, 0.45) 90%);
+  mask-image: linear-gradient(var(--wx, 90deg), rgba(0, 0, 0, 0.6) 10%, rgba(0, 0, 0, 0.16) 34%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0.14) 72%, rgba(0, 0, 0, 0.45) 90%);
+}
+.wx:hover, .wx.is-open { -webkit-mask-image: none; mask-image: none; }
+
+/* A figure that became a date in the reader's walk. */
+.wd { font-variant-numeric: lining-nums; color: color-mix(in srgb, currentColor 72%, var(--accent, #b4121b)); white-space: nowrap; }
+.wd:hover::after, .wd.is-open::after { content: "was " attr(data-was) " · Room " attr(data-from); }
+
+/* A sentence that finished itself with the previous plan. */
+.sf { font-style: italic; color: color-mix(in srgb, currentColor 78%, var(--accent, #b4121b)); }
+.sf:hover::after, .sf.is-open::after { content: "← Room " attr(data-from); }
+
+/* Register drift: report → minutes → liturgy → changelog. */
+.rg { font: 0.68em/1 var(--mono, ui-monospace, monospace); letter-spacing: 0.04em; color: #6d6d66; font-style: normal; white-space: nowrap; }
+.rg-minutes { font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #333; }
+.rg-liturgy { font: 1.05em/1 var(--serif, "ET Book", Georgia, serif); color: var(--accent, #b4121b); letter-spacing: 0; }
+.rg-changelog { color: #2f6b3a; }
+
+/* Footnotes that bleed into the line below. */
+sup.fn-bleed a { text-shadow: 0 0.32em 0 color-mix(in srgb, var(--accent, #b4121b) 34%, transparent), 0 0.66em 0.5px color-mix(in srgb, var(--accent, #b4121b) 16%, transparent), 0 1.05em 1px color-mix(in srgb, var(--accent, #b4121b) 7%, transparent); }
+
+/* A sentence still set in the grammar of the room the reader came from. */
+.gx:hover::after, .gx.is-open::after { content: "← Room " attr(data-from); }
+.gx-report { font-family: var(--serif, "ET Book", Georgia, serif); font-style: normal; background: #fffff8; color: #111; -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 0.15em; }
+.gx-mirror { unicode-bidi: bidi-override; direction: rtl; }
+.gx-homepage { font-family: "Times New Roman", Times, serif; color: #000080; background: #ffff9e; }
+.gx-tokens { font: 0.82em var(--mono, ui-monospace, monospace); background: linear-gradient(var(--accent, #b4121b), var(--accent, #b4121b)) 0 100% / 1px 5px repeat-x; background-size: 3.2em 4px; }
+.gx-schematic { font: 0.74em var(--mono, ui-monospace, monospace); text-transform: uppercase; letter-spacing: 0.12em; color: #1d3a8a; }
+.gx-number { font-variant-numeric: lining-nums tabular-nums; font-weight: 700; letter-spacing: 0.06em; }
+.gx-void { background: #0a0a09; color: #d9d9cf; -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 0.2em; }
+.gx-blank { color: color-mix(in srgb, currentColor 38%, transparent); }
+.gx-unfiled { font-family: "Courier New", Courier, monospace; font-size: 0.86em; }
+.gx-index { font-variant: small-caps; letter-spacing: 0.04em; }
+.gx-after { font-style: italic; color: #6d6d66; }
+.gx-centre { font-style: italic; text-transform: lowercase; color: color-mix(in srgb, currentColor 55%, transparent); }
+.gx-graph { color: var(--accent, #b4121b); font-style: italic; }
+.gx-wheel { font-variant: small-caps; color: var(--accent, #b4121b); font-weight: 700; letter-spacing: 0.03em; }
+.gx-registry { font: 0.76em var(--mono, ui-monospace, monospace); text-transform: uppercase; letter-spacing: 0.08em; }
+.gx-long, .gx-gen { font-style: italic; letter-spacing: 0.02em; }
+
+/* ---------- dark rooms ---------- */
+/* (the centre is paper by day; only its night is dark) */
+html[data-grammar="void"] .cf, html[data-grammar="centre"] .c-night .cf { --cf-ink: #e9e9df; }
+html[data-grammar="void"] .rx, html[data-grammar="centre"] .c-night .rx { --rx-ink: #e9e9df; --rx-leak: #e0342f; }
+html[data-grammar="void"] .gx-void, html[data-grammar="centre"] .c-night .gx-void { background: #fffff8; color: #111; }
+html[data-grammar="void"] .rg, html[data-grammar="centre"] .c-night .rg { color: #8c8c84; }
+html[data-grammar="void"] .rg-minutes, html[data-grammar="centre"] .c-night .rg-minutes { color: #c9c9bf; }
+html[data-grammar="void"] .rg-changelog { color: #7fbf8a; }
+html[data-grammar="void"] .gx-homepage { color: #000080; }
+
+@media (max-width: 860px) {
+  .cf-margin, .cf-margin.cf-left { float: none; width: auto; margin: 6px 0 16px; }
+  .cf-curve { width: 110px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf, .rx { transition: none; }
+}
+
+/* Owner: a plan is never underneath debris. Carried fragments, cards and leaning
+   paragraphs may cross a plan, but the plan stays the thing you touch. */
+main a.plan-in, main a.door { position: relative; z-index: 6; pointer-events: auto; }
+
+/* Owner: a reveal never moves the words under the pointer. What a touched
+   word says about itself is a small tag hung below it, not inserted text, so a
+   plan inside it cannot slide away between press and release. */
+.cf, .sw, .wd, .sf, .gx, .rx[data-from] { position: relative; }
+.sw:hover::after, .sw.is-open::after,
+.wd:hover::after, .wd.is-open::after,
+.sf:hover::after, .sf.is-open::after,
+.gx:hover::after, .gx.is-open::after,
+.rx[data-from]:hover::after, .rx[data-from]:focus-visible::after, .rx[data-from].is-open::after,
+.cf:hover::after, .cf.is-open::after, a:focus-visible > .cf::after {
+  position: absolute; left: 0; top: 100%; z-index: 8;
+  margin-top: 2px; padding: 1px 5px;
+  font: 400 10px/14px var(--mono, ui-monospace, monospace); font-style: normal; letter-spacing: 0.02em;
+  white-space: nowrap; color: var(--accent, #b4121b); background: var(--paper, #fffff8);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent, #b4121b) 35%, transparent);
+  pointer-events: none;
+}
+/* a carried fragment that is a plan keeps its lean while you reach for it */
+a.plan-in .cf:hover, a.plan-in:hover .cf { rotate: var(--cf-r, 0deg); }
+/* the source number sits in reserved space beside the fragment, so showing the
+   longer tag on hover does not change the line */
+.cf { margin-right: 1.15em; }
+.cf::after { position: absolute; left: 100%; top: -0.35em; vertical-align: baseline; }
+
+/* Owner: contamination simply exists. No origin marks or reveals of where a
+   thing came from: the source number beside a fragment and every hover tag that
+   named a room are gone. (Touch still undoes a leak, a swap or a weathering.) */
+.cf::after, .cf:hover::after, .cf.is-open::after, a:focus-visible > .cf::after,
+.sf:hover::after, .sf.is-open::after, .gx:hover::after, .gx.is-open::after,
+.rx[data-from]:hover::after, .rx[data-from]:focus-visible::after, .rx[data-from].is-open::after { content: none; }
+.cf { margin-right: 0; }
+.sw:hover::after, .sw.is-open::after { content: attr(data-was); }
+.wd:hover::after, .wd.is-open::after { content: attr(data-was); }
+
+/* Owner: carried plan words are words, not a struck-out plan. */
+.cf-plan { text-decoration: none; }

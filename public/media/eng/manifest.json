@@ -1,0 +1,250 @@
+{
+ "generated": "2026-10-18T12:18:15+00:00",
+ "note": "Grayscale derivatives for plate engraving. jmill's own images from /shared/media, plus public-domain engravings from Wikimedia Commons (entries with commons_page/artist/license).",
+ "files": [
+  {
+   "file": "jade-maze-elder-1024.webp",
+   "source": "jade-maze-elder.jpg",
+   "long_side": 768,
+   "width": 768,
+   "height": 768,
+   "bytes": 41000,
+   "source_bytes": 157746,
+   "sha256": "82e230afa6e302e5bea2bcd2276ba9e42669c28fd96a3947b53d164b0338e238"
+  },
+  {
+   "file": "jade-maze-elder-640.webp",
+   "source": "jade-maze-elder.jpg",
+   "long_side": 640,
+   "width": 640,
+   "height": 640,
+   "bytes": 33416,
+   "source_bytes": 157746,
+   "sha256": "b905168db7d1d631027fad3b3dfc92e0ddc33fdc4aa8407f7f038f6a74e318ab"
+  },
+  {
+   "file": "jade-maze-open-arms-1024.webp",
+   "source": "jade-maze-open-arms.jpg",
+   "long_side": 768,
+   "width": 768,
+   "height": 768,
+   "bytes": 43298,
+   "source_bytes": 168730,
+   "sha256": "27ab57bdb0d21e3499e0a6b8f0d9e6431af26115c466be86925e6746d2b66daa"
+  },
+  {
+   "file": "jade-maze-open-arms-640.webp",
+   "source": "jade-maze-open-arms.jpg",
+   "long_side": 640,
+   "width": 640,
+   "height": 640,
+   "bytes": 36542,
+   "source_bytes": 168730,
+   "sha256": "e6c810bd88d0c4dc2a60104bc838892ff6e2634686fef4c5d32962d63aff85a1"
+  },
+  {
+   "file": "jade-maze-portrait-1024.webp",
+   "source": "jade-maze-portrait.jpg",
+   "long_side": 768,
+   "width": 768,
+   "height": 768,
+   "bytes": 62940,
+   "source_bytes": 193640,
+   "sha256": "804866d10a0400873a9e4cafacdc4d8eb86c418a433483f8c075a6b362dd5c02"
+  },
+  {
+   "file": "jade-maze-portrait-640.webp",
+   "source": "jade-maze-portrait.jpg",
+   "long_side": 640,
+   "width": 640,
+   "height": 640,
+   "bytes": 50060,
+   "source_bytes": 193640,
+   "sha256": "75145f4b36bcf92f9601877f8d21c931b3a1a4932e8ae661f71293cf9dc83e70"
+  },
+  {
+   "file": "jade-maze-priestess-1024.webp",
+   "source": "jade-maze-priestess.jpg",
+   "long_side": 768,
+   "width": 768,
+   "height": 768,
+   "bytes": 60358,
+   "source_bytes": 187677,
+   "sha256": "3a5ffc5dcd244de7fe590142b2577184488e0773d8e7ce3e6a6264337a876d2e"
+  },
+  {
+   "file": "jade-maze-priestess-640.webp",
+   "source": "jade-maze-priestess.jpg",
+   "long_side": 640,
+   "width": 640,
+   "height": 640,
+   "bytes": 47920,
+   "source_bytes": 187677,
+   "sha256": "875dd4f30f0576408dc7cae5f021f01ebbf8924929ad9384a061e0ab69e39452"
+  },
+  {
+   "file": "jade-maze-temple-1024.webp",
+   "source": "jade-maze-temple.jpg",
+   "long_side": 768,
+   "width": 768,
+   "height": 768,
+   "bytes": 48176,
+   "source_bytes": 165508,
+   "sha256": "326f1573786e36e5c94e892bb99f1f756e91b92b18b65fde066b3d03214c2697"
+  },
+  {
+   "file": "jade-maze-temple-640.webp",
+   "source": "jade-maze-temple.jpg",
+   "long_side": 640,
+   "width": 640,
+   "height": 640,
+   "bytes": 37962,
+   "source_bytes": 165508,
+   "sha256": "36fd3585412e2b5dfa7d94f2378eb45595f4c70c7f315e0606d09825ffaebd1a"
+  },
+  {
+   "file": "maze-abyss-1024.webp",
+   "source": "maze-abyss.jpg",
+   "long_side": 1024,
+   "width": 1024,
+   "height": 1024,
+   "bytes": 268354,
+   "source_bytes": 439703,
+   "sha256": "e32745f3d3dc0c63f1bb9fe6739b0175a00cd27c6992c44880a802a09e4ed92e"
+  },
+  {
+   "file": "maze-abyss-640.webp",
+   "source": "maze-abyss.jpg",
+   "long_side": 640,
+   "width": 640,
+   "height": 640,
+   "bytes": 109670,
+   "source_bytes": 439703,
+   "sha256": "9492b20a142c4b611cfc252aa644e6e55193efdecba8a072e7970aa5818b8198"
+  },
+  {
+   "file": "void-loop-71-card-1024.webp",
+   "source": "void-loop-71-card.jpg",
+   "long_side": 1024,
+   "width": 687,
+   "height": 1024,
+   "bytes": 57376,
+   "source_bytes": 396019,
+   "sha256": "0683fc00f5bae125f404bf312a4ea71083e9fe467eb97bdc1855255dc83eece6"
+  },
+  {
+   "file": "void-loop-71-card-640.webp",
+   "source": "void-loop-71-card.jpg",
+   "long_side": 640,
+   "width": 429,
+   "height": 640,
+   "bytes": 31710,
+   "source_bytes": 396019,
+   "sha256": "41a8732ccef5025ad86ef47fab93884d6c0d35a08f25b620386a0b80d14c8267"
+  },
+  {
+   "file": "void-loop-vortex-1024.webp",
+   "source": "void-loop-vortex.jpg",
+   "long_side": 1024,
+   "width": 765,
+   "height": 1024,
+   "bytes": 50722,
+   "source_bytes": 330962,
+   "sha256": "6d6ad5b8f3793e48505eb6a4ae576c047f400b312aa7b52e539fa928e2ccea56"
+  },
+  {
+   "file": "void-loop-vortex-640.webp",
+   "source": "void-loop-vortex.jpg",
+   "long_side": 640,
+   "width": 478,
+   "height": 640,
+   "bytes": 27246,
+   "source_bytes": 330962,
+   "sha256": "239702799c55edfd166aa8b02a14f4825f5457e2245bda94c36af3aba528d76c"
+  },
+  {
+   "file": "piranesi-carceri-1024.webp",
+   "source": "piranesi-carceri.jpg",
+   "long_side": 1024,
+   "width": 787,
+   "height": 1024,
+   "bytes": 312852,
+   "source_bytes": 1805928,
+   "sha256": "24bacd52595e9587f7ff851bc6077a55858c22709bf6151cb0fc47811e45ab37",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Giovanni_Battista_Piranesi_-_Le_Carceri_d%27Invenzione_-_First_Edition_-_1750_-_07_-_The_Drawbridge.jpg",
+   "artist": "Giovanni Battista Piranesi",
+   "license": "Public domain",
+   "date": "between circa 1745 and circa 1750date QS:P571,+1750-00-00T00:00:00Z/7,P1319,+1745-00-00T00:00:00Z/9,P1326,+1750-00-00T00:00:00Z/9,P1480,Q5727902"
+  },
+  {
+   "file": "piranesi-carceri-640.webp",
+   "source": "piranesi-carceri.jpg",
+   "long_side": 640,
+   "width": 492,
+   "height": 640,
+   "bytes": 112834,
+   "source_bytes": 1805928,
+   "sha256": "c2c5d5f45fe726324365a9ed4f7546b24d73863c4994ef75fab6017ab27743f4",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Giovanni_Battista_Piranesi_-_Le_Carceri_d%27Invenzione_-_First_Edition_-_1750_-_07_-_The_Drawbridge.jpg",
+   "artist": "Giovanni Battista Piranesi",
+   "license": "Public domain",
+   "date": "between circa 1745 and circa 1750date QS:P571,+1750-00-00T00:00:00Z/7,P1319,+1745-00-00T00:00:00Z/9,P1326,+1750-00-00T00:00:00Z/9,P1480,Q5727902"
+  },
+  {
+   "file": "llull-figura-1024.webp",
+   "source": "llull-figura.png",
+   "long_side": 1000,
+   "width": 1000,
+   "height": 1000,
+   "bytes": 110492,
+   "source_bytes": 79515,
+   "sha256": "48fcae3efcf7f824465bf631ec960aaf7630edb14a48207944b7b8161f57a4f1",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Ramon_Llull_-_Ars_Magna_Fig_1.png",
+   "artist": null,
+   "license": "Public domain",
+   "date": null
+  },
+  {
+   "file": "llull-figura-640.webp",
+   "source": "llull-figura.png",
+   "long_side": 640,
+   "width": 640,
+   "height": 640,
+   "bytes": 66820,
+   "source_bytes": 79515,
+   "sha256": "2c4aa17a663b31081916f7a8c14daca2359f3858b1ac217176ac61d21cc571c7",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Ramon_Llull_-_Ars_Magna_Fig_1.png",
+   "artist": null,
+   "license": "Public domain",
+   "date": null
+  },
+  {
+   "file": "kircher-babel-1024.webp",
+   "source": "kircher-babel.jpg",
+   "long_side": 1024,
+   "width": 697,
+   "height": 1024,
+   "bytes": 207968,
+   "source_bytes": 2563251,
+   "sha256": "496c0c2309c0dba1bc89e2be4874faf17b339635e1bd79a8443ff6e024f6fcf9",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Athanasius_Kircher_-_Turris_Babel_-_1679_(page_5_crop).jpg",
+   "artist": "Athanasius Kircher",
+   "license": "Public domain",
+   "date": "1679"
+  },
+  {
+   "file": "kircher-babel-640.webp",
+   "source": "kircher-babel.jpg",
+   "long_side": 640,
+   "width": 436,
+   "height": 640,
+   "bytes": 63490,
+   "source_bytes": 2563251,
+   "sha256": "fcb68565e57f01e4fad474945c32c9a70fdf57e3b56bf814d5f6e9a86ebe1435",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Athanasius_Kircher_-_Turris_Babel_-_1679_(page_5_crop).jpg",
+   "artist": "Athanasius Kircher",
+   "license": "Public domain",
+   "date": "1679"
+  }
+ ]
+}

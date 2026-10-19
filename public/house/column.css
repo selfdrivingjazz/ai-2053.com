@@ -1,0 +1,253 @@
+/* The instrument column (owned by the early-rooms designer).
+   AI 2040's red infographic column, rebuilt for 2041–2053. column.js builds it once
+   inside <div id="column" class="col"> and only updates attributes and text.
+
+   Stable hooks for other stylesheets (e.g. grammars.css / deep.css restyling a room):
+     #column.col               the column root; data-room="N" mirrors the current room
+       .is-late                the room is not an early room: sparse, cheap, static
+       .is-torn                lasting damage: the room was revisited after the house tore
+       .is-void                lasting damage: the reader has been through a void
+       .is-loose               the capability curve has come loose (Room 7, and after)
+       .is-yours               the halftone field is showing the reader's walk (Room 20)
+       .is-adopting            (early rooms) the column has taken another room's fragment as its own data
+     .col-field                the halftone block: canvas.col-canvas + svg.col-curve + .col-chip (+ .col-axis on mobile)
+       .col-past / .col-future / .col-knob / .col-agent   the curve, its projection, the slider and its label
+       .col-alt                faint competing forecasts; .col-over the oversight series
+       .col-adopt              an adopted curve from another room (also drawn as swollen dots in the canvas)
+       .col-cable              the loose end of the curve (overflows the column to the left)
+     .col-legend               legend under the field (.col-key; .col-key-over-k is the series nobody
+                               plotted; .col-key-adopt names an adopted series)
+     .col-mid                  .col-left (.col-ladder > .col-row[data-row=current|discussion|off] > .col-icons > .col-ic
+                               (.col-ic-plan: an adopted plan), .col-metrics[.has-5] > .col-m > .col-v + .col-k
+                               (.col-m-adopt: an adopted figure, wrong unit)) and svg.col-tree (> g.col-lab[.mark][.adopt])
+     .col-work                 .col-dots > i[.on][.fell][.gone] and .col-work-k (.gone: fallen out, drawn in the fall)
+     canvas.col-phys           what has fallen out of the instruments, under gravity, down to the viewport's foot;
+                               never takes the pointer
+     .scene-globe / .scene-units  the field is showing the Lattice globe or the workforce unit chart
+                               (canvas); .col-scene is that picture's caption under the field
+   Motion vars on the root (set by column.js; all 0 under reduced motion): --cp scroll, --ca dot wave,
+   --cs icon swell, --cw icon twist, --cj metric jitter.
+   Hiding the column in a room: `[data-room="N"] ~ … ` is not reachable from the article;
+   use `#column[data-room="N"] { … }` instead. Late and deep rooms should keep it sparse:
+   `.is-late` already hides the legend and greys the instruments. */
+
+.col {
+  --col-red: #b4121b;
+  --col-ink: #111;
+  --col-paper: #fffff8;
+  position: relative;
+  font: 10.5px/14px var(--mono);
+  color: var(--col-ink);
+}
+
+/* ---------- field ---------- */
+
+.col-field {
+  position: relative;
+  aspect-ratio: 1.36;
+  width: 100%;
+}
+.col-canvas, .col-curve { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.col-curve { overflow: visible; pointer-events: none; }
+.col-past { fill: none; stroke: var(--col-red); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.col-future { fill: none; stroke: var(--col-ink); stroke-width: 1.6; stroke-dasharray: 3 4; stroke-linecap: round; }
+.col-alt { fill: none; stroke: var(--col-ink); stroke-width: 1.1; stroke-dasharray: 1 3.5; stroke-linecap: round; opacity: 0.55; }
+.col-over { fill: none; stroke: var(--col-ink); stroke-width: 1.1; stroke-dasharray: 6 3 1 3; opacity: 0.7; }
+.col-knob { fill: var(--col-red); stroke: var(--col-paper); stroke-width: 1.5; }
+.col-agent { font: 700 10px var(--mono); fill: var(--col-ink); paint-order: stroke; stroke: var(--col-paper); stroke-width: 3px; stroke-linejoin: round; letter-spacing: 0.02em; }
+.col-cable path { fill: none; stroke: var(--col-ink); stroke-width: 1.7; stroke-linecap: round; }
+.col-cable-ends { stroke-width: 0.9 !important; }
+@media (prefers-reduced-motion: no-preference) {
+  .col.is-loose .col-cable[data-on="1"] { animation: col-sway 5.2s ease-in-out infinite alternate; }
+}
+@keyframes col-sway {
+  from { transform: rotate(-2.2deg); }
+  to { transform: rotate(3deg); }
+}
+
+.col-chip {
+  position: absolute;
+  left: 14px;
+  top: 12px;
+  padding: 4px 9px;
+  border-radius: 5px;
+  background: var(--col-paper);
+  font: 700 14px/18px var(--mono);
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.col-axis { display: none; }
+
+/* ---------- scenes: the field's other pictures (globe, units) ---------- */
+
+.col-scene {
+  position: absolute;
+  left: 0;
+  bottom: -16px;
+  font: 9.5px/12px var(--mono);
+  letter-spacing: 0.02em;
+  color: #555;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.col-scene:empty { display: none; }
+.col-curve > * { transition: opacity 0.35s ease; }
+.col.scene-units .col-curve > :not(.col-cable),
+.col.scene-globe .col-alt, .col.scene-globe .col-over, .col.scene-globe .col-adopt { opacity: 0; }
+.col.scene-units .col-legend, .col.scene-globe .col-legend { visibility: hidden; }
+@media (prefers-reduced-motion: no-preference) {
+  .col-field.col-swap .col-canvas { animation: col-swap 0.42s ease-out; }
+}
+@keyframes col-swap {
+  from { opacity: 0.15; }
+}
+
+.col-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 14px;
+  margin: 8px 0 0;
+  color: #555;
+  font-size: 9.5px;
+}
+.col-key { white-space: nowrap; }
+.col-key i { display: inline-block; width: 14px; margin-right: 5px; vertical-align: middle; border-top: 3px solid var(--col-red); }
+.col-key .col-key-proj { border-top: 1.6px dashed var(--col-ink); }
+.col-key .col-key-over { border-top: 1.2px dotted var(--col-ink); }
+.is-late .col-legend { visibility: hidden; }
+
+/* ---------- ladder, metrics, treemap ---------- */
+
+.col-mid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+  margin-top: 16px;
+}
+.col-ladder { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.col-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 26px;
+  border-bottom: 1px dotted rgba(17, 17, 17, 0.18);
+}
+.col-row-k { font-size: 9.5px; white-space: nowrap; }
+.col-icons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 2px; min-height: 16px; }
+.col-ic {
+  display: inline-grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border: 1.2px solid var(--col-ink);
+  border-radius: 4px;
+  background: var(--col-paper);
+  transition: transform 0.4s ease;
+}
+.col-ic svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.col-row[data-row="discussion"] .col-ic { background: var(--col-red); border-color: var(--col-red); color: var(--col-paper); }
+.col-row[data-row="current"] .col-ic { border-color: var(--col-ink); }
+.col-row[data-row="off"] .col-ic { opacity: 0.85; }
+.col-ic.slipped { transform: translate(-46px, 15px) rotate(-14deg); position: relative; z-index: 1; box-shadow: 0 0 0 2px var(--col-paper); }
+
+.col-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 4px;
+  margin: 14px 0 0;
+  text-align: center;
+}
+.col-m { min-width: 0; }
+.col-v { margin: 0; font: 700 12px/16px var(--mono); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.col-k { font-size: 8.5px; line-height: 11px; color: #333; }
+.col-k.slid { transform: translate(9px, 7px) rotate(6deg); color: var(--col-red); }
+.col-v.ticking { color: var(--col-red); }
+
+.col-tree { display: block; width: 100%; height: 150px; overflow: visible; }
+.col-lab rect { fill: var(--col-paper); stroke: var(--col-ink); stroke-width: 1.2; vector-effect: non-scaling-stroke; }
+.col-lab.mark rect { stroke: var(--col-red); stroke-width: 2; }
+.col-lab text { font: 700 10px var(--mono); fill: var(--col-red); letter-spacing: 0.04em; }
+
+/* ---------- adopted: other rooms' fragments, kept as the column's own data ---------- */
+
+.col-adopt { fill: none; stroke: var(--col-ink); stroke-width: 1; stroke-dasharray: 1 3; stroke-linecap: round; opacity: 0.75; }
+.col-key-adopt i { border-top: 3px dotted var(--col-red); }
+.col-metrics.has-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 3px; }
+.col-metrics.has-5 .col-v { font-size: 11px; white-space: normal; overflow-wrap: anywhere; line-height: 13px; }
+.col-m-adopt .col-k { overflow-wrap: anywhere; }
+.col-ic.col-ic-plan { width: auto; min-width: 16px; padding: 0 2px; border-color: var(--col-ink); }
+.col-ic-plan b { font: 700 8.5px/12px var(--mono); letter-spacing: -0.02em; }
+.col-lab.adopt rect { stroke-dasharray: 4 2; }
+
+/* ---------- workforce ---------- */
+
+.col-work { margin-top: 20px; }
+.col-dots { display: flex; justify-content: space-between; height: 9px; }
+.col-dots i {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border: 1.2px solid var(--col-ink);
+  border-radius: 50%;
+  background: var(--col-paper);
+}
+.col-dots i.on { background: var(--col-red); border-color: var(--col-red); }
+.col-dots i.fell { transform: translate(var(--fx), var(--fy)) rotate(var(--fr)); }
+.col-dots i.gone { visibility: hidden; }
+.col-o { display: inline-block; width: 7px; height: 7px; margin-right: 6px; border: 1.2px solid var(--col-ink); border-radius: 50%; vertical-align: -0.5px; }
+.col-o.on { background: var(--col-red); border-color: var(--col-red); }
+.col-work-k { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; margin: 7px 0 0; font-size: 9.5px; }
+.col-work-k > span { white-space: nowrap; }
+.col-work-k b { margin-right: 4px; }
+.col-ag b { color: var(--col-red); }
+
+/* ---------- reading: the instruments move with the scroll ---------- */
+
+.col-phys { position: absolute; left: 0; top: 0; z-index: 2; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .col-dots i { translate: 0 calc(sin(var(--cp, 0) * 12.566rad - var(--i, 0) * 0.45rad) * var(--ca, 0) * 1px); }
+  .col-ic {
+    scale: calc(1 + var(--cs, 0) * sin(var(--cp, 0) * 12.566rad - var(--k, 0) * 0.9rad));
+    rotate: calc(sin(var(--cp, 0) * 9.42rad + var(--k, 0) * 2.1rad) * var(--cw, 0) * 1deg);
+  }
+  .col-v { translate: 0 calc(sin(var(--cp, 0) * 20rad + var(--mi, 0) * 2rad) * var(--cj, 0) * 1px); }
+}
+
+/* ---------- lasting damage ---------- */
+
+.col.is-void .col-row-k { color: var(--col-red); }
+.col.is-torn .col-legend .col-key:nth-child(2) { transform: translateY(5px) rotate(-3deg); }
+
+/* ---------- late rooms: what is left of the instruments ---------- */
+
+.col.is-late .col-ic { opacity: 0.35; }
+.col.is-late .col-row-k, .col.is-late .col-k { color: var(--faint, #b9b9b0); }
+.col.is-late .col-agent { display: none; }
+.col.is-late .col-past { stroke-width: 2; }
+
+/* ---------- mobile: the sticky strip ---------- */
+
+@media (max-width: 860px) {
+  .col-field { aspect-ratio: auto; height: 58px; }
+  .col-chip { left: 0; top: 4px; padding: 2px 7px; font-size: 12px; line-height: 16px; background: var(--col-ink); color: var(--col-paper); }
+  .col-axis {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    display: flex;
+    justify-content: space-between;
+    font: 9px/10px var(--mono);
+    color: #555;
+    pointer-events: none;
+  }
+  .col-agent { font-size: 8.5px; }
+  .col-over, .col.is-yours .col-agent { display: none; }
+  .col.scene-globe .col-axis, .col.scene-units .col-axis, .col-scene { visibility: hidden; }
+  .col-legend, .col-mid, .col-work { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .col-ic, .col-k, .col-curve > * { transition: none; }
+}

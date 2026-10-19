@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<title>AI 2053 · social card source</title>
+<!--
+  Source of /media/og/house-of-2053.png (1200 × 630), the og:image / twitter:image.
+  Composition: the room-1 masthead and "Choose a Path" block on the left, the
+  instrument column's halftone field and capability curve on the right — the
+  site's own furniture, drawn statically, as the house is before anyone walks it.
+
+  Render (from the repo root, with the site served locally on a spare port):
+    PORT=4431 node server.mjs &
+    ~/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell \
+      --no-sandbox --hide-scrollbars --force-device-scale-factor=1 --window-size=1200,630 \
+      --virtual-time-budget=4000 --screenshot=public/media/og/house-of-2053.png \
+      http://127.0.0.1:4431/media/og/card.html
+  Any headless Chromium works. The mono labels use the system monospace
+  (the site's --mono stack), so render on a machine with DejaVu Sans Mono for an identical PNG.
+-->
+<link rel="stylesheet" href="/shared/fonts/et-book.css">
+<style>
+  :root {
+    --paper: #fffff8;
+    --ink: #111;
+    --red: #b4121b;
+    --mute: #6d6d66;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "DejaVu Sans Mono", monospace;
+    --serif: "ET Book", Palatino, Georgia, serif;
+    --sans: "Gill Sans", "Gill Sans MT", Seravek, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: var(--paper); color: var(--ink); }
+  body { position: relative; font-family: var(--serif); -webkit-font-smoothing: antialiased; font-variant-numeric: lining-nums; }
+
+  /* left: the masthead and the first choice */
+  .left { position: absolute; left: 68px; top: 50px; width: 520px; }
+  .k { margin: 0; font-size: 30px; line-height: 34px; text-transform: uppercase; }
+  .t { margin: 10px 0 0 -4px; font-weight: 400; font-size: 104px; line-height: 92px; letter-spacing: -0.012em; }
+  .by { margin: 16px 0 0; font-size: 18.5px; line-height: 25px; letter-spacing: -0.02em; color: #222; }
+  .nb { white-space: nowrap; }
+  .q { margin: 24px 0 0; padding: 13px 18px 14px; border: 1.5px solid var(--ink); border-radius: 9px; font-size: 24px; line-height: 30px; }
+  .doors { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0; padding: 0; list-style: none; }
+  .wire { position: relative; height: 64px; padding: 8px 0 0 30px; }
+  .wire::before { content: ""; position: absolute; left: 16px; top: 0; bottom: 0; border-left: 1.5px solid #777; }
+  .say { margin: 0; font-style: italic; font-size: 16.5px; line-height: 20px; color: #333; }
+  .door { padding: 14px 6px 13px; border: 2px solid var(--ink); border-radius: 5px; text-align: center; font: 700 16px/20px var(--sans); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* right: the instrument column's field */
+  .fig { position: absolute; left: 648px; top: 56px; width: 488px; height: 452px; }
+  .fig canvas, .fig svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .chip { position: absolute; left: 14px; top: 12px; padding: 4px 9px 5px; background: var(--paper); border-radius: 4px; font: 600 15px/18px var(--mono); }
+  .axis { position: absolute; left: 648px; top: 530px; width: 488px; font: 15px/18px var(--mono); }
+  .axis .lab { position: absolute; left: 0; top: 0; letter-spacing: 0.14em; text-transform: uppercase; }
+  .axis .yr { position: absolute; top: 27px; color: var(--mute); }
+</style>
+</head>
+<body>
+<div class="left">
+  <p class="k">AI 2053</p>
+  <h1 class="t">The House<br>of 2053</h1>
+  <p class="by"><span class="nb">Waymo Shorter,</span> <span class="nb">Maxwell Tokens,</span> <span class="nb">Arthur Basil,</span> <span class="nb">Benson Spoons,</span> <span class="nb">Satoshi Guapomoto,</span> <span class="nb">jmill,</span> <span class="nb">STEWARD-7</span></p>
+  <div class="q">Do you trust the evaluations?</div>
+  <ol class="doors">
+    <li><div class="wire"><p class="say">“Yes, and that’s good actually.”</p></div><div class="door">Plan 4</div></li>
+    <li><div class="wire"><p class="say">“Follow the compute instead.”</p></div><div class="door">Plan 5</div></li>
+    <li><div class="wire"><p class="say">“Read the appendix first.”</p></div><div class="door">Plan 3</div></li>
+  </ol>
+</div>
+
+<div class="fig">
+  <canvas id="dots" width="976" height="904"></canvas>
+  <svg id="curve" viewBox="0 0 488 452" aria-hidden="true"></svg>
+  <span class="chip">Jan 2041</span>
+</div>
+<div class="axis">
+  <span class="lab">Steward index</span>
+  <span class="yr" style="left:0">2041</span>
+  <span class="yr" style="right:0">2053</span>
+</div>
+
+<script>
+// The column's halftone and capability curve (public/house/column.js: field, curveGeom),
+// at the state of a fresh house read to the foot of room 1, without motion.
+const W = 488, H = 452, pitch = 8, RED = "#b4121b", INK = "#111";
+const pad = 2, base = H - 4;
+const X = (t) => pad + ((t - 2041) / 12) * (W - 2 * pad);
+const knee = 2049.1, k = 1.9;
+const Y = (t, kn = knee) => base - Math.min(base, (base - 4) * 0.22 * Math.exp((t - kn) * k));
+const curves = [knee, knee + 1.3, knee + 2.7];
+const tNow = 2042.6;
+const clamp01 = (x) => Math.min(1, Math.max(0, x));
+
+const g = document.getElementById("dots").getContext("2d");
+g.scale(2, 2);
+g.fillStyle = RED;
+const cols = Math.floor(W / pitch), rows = Math.floor(H / pitch);
+const ox = (W - cols * pitch) / 2 + pitch / 2, oy = pitch / 2;
+const floorY = 0.8, vigour = 0.78 + 0.36 * 0.5;
+g.beginPath();
+for (let j = 0; j < rows; j++) {
+  const y = oy + j * pitch;
+  for (let i = 0; i < cols; i++) {
+    const x = ox + i * pitch;
+    const t = 2041 + ((x - pad) / (W - 2 * pad)) * 12;
+    let v = Math.pow(clamp01(1 - y / H / floorY), 0.75) * vigour;
+    // Pale channels where the curves run shallow; steep runs are left to the stroke.
+    curves.forEach((kn, c) => {
+      const cy = Y(t, kn), steep = Math.abs(Y(t + 0.05, kn) - cy) > 8;
+      if (cy > 0 && !steep && Math.abs(y - cy) < (c ? 4 : 6)) v *= c ? 0.4 : 0.12;
+    });
+    const r = Math.min(1, v) * pitch * 0.56;
+    if (r < 0.35) continue;
+    g.moveTo(x + r, y);
+    g.arc(x, y, r, 0, Math.PI * 2);
+  }
+}
+g.fill();
+
+const svg = document.getElementById("curve");
+const path = (t0, t1, kn) => {
+  let d = "";
+  for (let i = 0; i <= 240; i++) {
+    const t = t0 + ((t1 - t0) * i) / 240;
+    const y = Y(t, kn);
+    d += `${i ? "L" : "M"}${X(t).toFixed(1)} ${y.toFixed(1)}`;
+    if (y <= 0) break;
+  }
+  return d;
+};
+svg.innerHTML = `
+  <path d="${path(2041, 2053, curves[2])}" fill="none" stroke="${INK}" stroke-width="1.6" stroke-dasharray="1.5 4" stroke-linecap="round" opacity="0.7"/>
+  <path d="${path(2041, 2053, curves[1])}" fill="none" stroke="${INK}" stroke-width="1.6" stroke-dasharray="1.5 4" stroke-linecap="round" opacity="0.7"/>
+  <path d="${path(tNow, 2053, curves[0])}" fill="none" stroke="${INK}" stroke-width="3" stroke-dasharray="9 7"/>
+  <path d="${path(2041, tNow, curves[0])}" fill="none" stroke="${RED}" stroke-width="5"/>
+  <circle cx="${X(2041)}" cy="${Y(2041)}" r="5.5" fill="${RED}"/>`;
+</script>
+</body>
+</html>
